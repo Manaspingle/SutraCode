@@ -9,7 +9,7 @@
   <!-- Minimalist Workspace Header & Quick Actions -->
   <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
     <div>
-      <h2 class="h5 fw-bold mb-0 text-light d-flex align-items-center gap-2">
+      <h2 class="h5 fw-bold mb-0 d-flex align-items-center gap-2">
         <span class="badge bg-warning text-dark px-2 py-1 rounded-pill" style="font-size: 0.68rem; font-weight: 800;">WORKSPACE</span>
         Evidence-Grounded Debugger
       </h2>
@@ -40,7 +40,7 @@
         <div class="d-flex align-items-center justify-content-between mb-2">
           <div class="d-flex align-items-center gap-2">
             <label class="small text-secondary fw-semibold mb-0">Language:</label>
-            <select id="languageSelector" class="form-select form-select-sm py-1 px-2 text-light" style="width: 130px; font-size: 0.8rem; background-color: #0E121A !important;">
+            <select id="languageSelector" class="form-select form-select-sm py-1 px-2" style="width: 130px; font-size: 0.8rem;">
               <option value="python" selected>Python</option>
               <option value="javascript">JavaScript</option>
               <option value="java">Java</option>
@@ -93,7 +93,7 @@
       <div class="sutra-card p-3 h-100 d-flex flex-column">
         
         <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom border-secondary border-opacity-25">
-          <span class="small fw-bold text-light d-flex align-items-center gap-2">
+          <span class="small fw-bold d-flex align-items-center gap-2">
             <i class="bi bi-journal-text text-warning"></i> Knowledge Base (RAG)
           </span>
           <span id="docCountBadge" class="badge bg-secondary bg-opacity-25 text-warning border border-warning border-opacity-25" style="font-size: 0.72rem;">0 Documents</span>
@@ -104,11 +104,11 @@
           <div class="d-flex align-items-center gap-2">
             <i class="bi bi-cloud-arrow-up text-warning fs-5"></i>
             <div>
-              <div class="small fw-semibold text-light">Drop PDF or TXT manual</div>
+              <div class="small fw-semibold">Drop PDF or TXT manual</div>
               <div class="text-muted" style="font-size: 0.72rem;">Max 15MB • PyMuPDF chunking</div>
             </div>
           </div>
-          <button type="button" class="btn btn-sm btn-outline-light py-1 px-2" style="font-size: 0.75rem;">Browse</button>
+          <button type="button" class="btn btn-sm btn-outline-secondary py-1 px-2" style="font-size: 0.75rem;">Browse</button>
           <input type="file" id="documentFileInput" class="d-none" accept=".pdf,.txt">
         </div>
 
@@ -145,7 +145,7 @@
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 pb-3 mb-3 border-bottom border-secondary border-opacity-25">
       <div class="d-flex align-items-center gap-2">
         <span id="resSeverity" class="badge badge-severity badge-high">HIGH</span>
-        <h3 class="h5 fw-bold m-0 text-light" id="resSummaryTitle">Root Cause Isolated</h3>
+        <h3 class="h5 fw-bold m-0" id="resSummaryTitle">Root Cause Isolated</h3>
       </div>
       <div class="d-flex align-items-center gap-2">
         <span id="resEvidenceBadge" class="badge bg-success bg-opacity-20 text-success border border-success border-opacity-40 px-2 py-1" style="font-size: 0.75rem;">
@@ -162,13 +162,13 @@
       <div class="small fw-bold text-warning mb-1 text-uppercase" style="letter-spacing: 0.05em; font-size: 0.72rem;">
         <i class="bi bi-exclamation-diamond me-1"></i> Root Cause & Diagnosis
       </div>
-      <p id="resRootCauseText" class="text-light mb-0 small leading-relaxed"></p>
+      <p id="resRootCauseText" class="mb-0 small leading-relaxed"></p>
     </div>
 
     <!-- 2. The Fix: Interactive Unified Diff -->
     <div class="mb-3">
       <div class="d-flex align-items-center justify-content-between mb-2">
-        <span class="small fw-bold text-light">
+        <span class="small fw-bold">
           <i class="bi bi-file-earmark-diff text-success me-1"></i> Verified Minimal Code Correction
         </span>
         <span class="badge bg-dark text-muted border border-secondary" style="font-size: 0.7rem;">+ Added / - Removed</span>
@@ -178,12 +178,12 @@
       <div class="diff-container p-2 mb-2" id="resDiffContainer"></div>
 
       <!-- Clean Highlighted Output -->
-      <pre class="m-0 rounded p-3" style="background: #090B10; border: 1px solid var(--border-card);"><code id="resCorrectedCode" class="language-python"></code></pre>
+      <pre class="code-display-box m-0 rounded p-3"><code id="resCorrectedCode" class="language-python"></code></pre>
     </div>
 
     <!-- 3. Source Evidence Citations (Verbatim Documentation Excerpts) -->
     <div class="mb-3">
-      <div class="small fw-bold text-light mb-2">
+      <div class="small fw-bold mb-2">
         <i class="bi bi-journal-check text-warning me-1"></i> Verified Documentation Evidence
       </div>
       <div id="resEvidenceList">
@@ -208,7 +208,7 @@
   <div class="modal-dialog modal-dialog-centered" style="max-width: 420px;">
     <div class="modal-content modal-content-custom">
       <div class="modal-header border-bottom border-secondary border-opacity-25 pb-3">
-        <h6 class="modal-title fw-bold text-light m-0 d-flex align-items-center gap-2">
+        <h6 class="modal-title fw-bold m-0 d-flex align-items-center gap-2">
           <span class="spinner-border spinner-border-sm text-warning"></span>
           <span>Verifying with Evidence</span>
         </h6>
@@ -242,7 +242,7 @@
 <!-- Sleek Developer IDE Status Bar (Replaces generic badges footer on Workspace) -->
 <div class="ide-status-bar fixed-bottom">
   <div class="d-flex align-items-center gap-2 gap-sm-3">
-    <span class="d-inline-flex align-items-center gap-1 text-light">
+    <span class="d-inline-flex align-items-center gap-1">
       <span class="beacon-dot" style="background-color: var(--accent-emerald);"></span>
       <span class="fw-semibold text-success">RAG <span class="d-none d-sm-inline">Pipeline </span>Live</span>
     </span>

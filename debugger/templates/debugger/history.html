@@ -8,7 +8,7 @@
 
   <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
     <div>
-      <h2 class="h5 fw-bold m-0 text-light d-flex align-items-center gap-2">
+      <h2 class="h5 fw-bold m-0 d-flex align-items-center gap-2">
         <span class="badge bg-warning text-dark px-2 py-1 rounded-pill" style="font-size: 0.68rem; font-weight: 800;">HISTORY</span>
         Past Analysis Records
       </h2>
@@ -40,7 +40,7 @@
               <td><span class="badge bg-dark text-secondary border border-secondary" style="font-size: 0.7rem;">{{ r.language|upper }}</span></td>
               <td><span class="badge badge-severity badge-{{ r.severity }}">{{ r.severity|upper }}</span></td>
               <td>
-                <div class="fw-semibold text-light small text-truncate" style="max-width: 440px;" title="{{ r.diagnosis_summary }}">
+                <div class="fw-semibold small text-truncate" style="max-width: 440px;" title="{{ r.diagnosis_summary }}">
                   {{ r.diagnosis_summary }}
                 </div>
               </td>
@@ -56,7 +56,7 @@
                 {% endif %}
               </td>
               <td class="text-end">
-                <a href="{% url 'debugger:results' r.id %}" class="btn btn-sm btn-outline-light py-1 px-2" style="font-size: 0.74rem;">
+                <a href="{% url 'debugger:results' r.id %}" class="btn btn-sm btn-sutra-secondary py-1 px-2" style="font-size: 0.74rem;">
                   Inspect →
                 </a>
               </td>

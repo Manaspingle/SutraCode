@@ -9,7 +9,7 @@
   <!-- HERO SECTION: Split Layout with Left Content & Right 3D Rotating Globe -->
   <div class="row align-items-center justify-content-between pt-2 pb-5 min-vh-75 position-relative">
     
-    <!-- LEFT: High-Impact Typography & Action CTAs (from user uploaded layout) -->
+    <!-- LEFT: High-Impact Typography & Action CTAs -->
     <div class="col-lg-7 text-start position-relative pe-lg-4" style="z-index: 2;">
       
       <!-- Telemetry Beacon Badge -->
@@ -20,12 +20,10 @@
         <i class="bi bi-arrow-right text-warning small"></i>
       </div>
 
-      <!-- Main Heading -->
+      <!-- Main Heading (Clean in both Dark and Light mode) -->
       <h1 class="display-3 fw-bold mb-3 tracking-tight" style="letter-spacing: -0.04em; line-height: 1.12;">
         Trace the cause.<br>
-        <span style="background: linear-gradient(135deg, #FFFFFF 30%, #F59E0B 75%, #D97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-          Verify the fix.
-        </span>
+        <span class="hero-gradient-text">Verify the fix.</span>
       </h1>
 
       <!-- Subtitle -->
@@ -58,7 +56,7 @@
 
     </div>
 
-    <!-- RIGHT: 3D Rotating Globe with Atmospheric Glow & Floating Orbit Badges -->
+    <!-- RIGHT: Clean 3D Rotating Globe (Unwanted floating badges removed) -->
     <div class="col-lg-5 text-center mt-5 mt-lg-0 position-relative py-3">
       
       <div class="globe-container-3d">
@@ -72,27 +70,13 @@
           <div class="star-particle p5"></div>
           <div class="star-particle p6"></div>
         </div>
-
-        <!-- Floating Orbiting Badges Around the 3D Globe -->
-        <div class="globe-orbit-badge globe-badge-top">
-          <span class="beacon-dot emerald"></span>
-          <span>384-dim Dense Retrieval</span>
-        </div>
-        <div class="globe-orbit-badge globe-badge-mid">
-          <i class="bi bi-stars text-warning"></i>
-          <span>Gemini Flash Grounding</span>
-        </div>
-        <div class="globe-orbit-badge globe-badge-bot">
-          <i class="bi bi-patch-check-fill text-success"></i>
-          <span>Verifiable Citations (&lt;45ms)</span>
-        </div>
       </div>
 
     </div>
 
   </div>
 
-  <!-- SECTION 1: REVAMPED ARCHITECTURE PIPELINE (State-of-the-art layout) -->
+  <!-- SECTION 1: SMOOTH ANIMATED NEURAL PIPELINE (No AI generated image blocks) -->
   <div class="my-5 pt-4">
     
     <!-- Section Title & Badge -->
@@ -101,109 +85,91 @@
         <i class="bi bi-cpu text-warning small"></i>
         <span class="text-warning fw-bold text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.08em;">NEURAL RAG PIPELINE</span>
       </div>
-      <h2 class="h3 fw-bold text-light">How SutraTrace Works Under The Hood</h2>
+      <h2 class="h3 fw-bold mb-2">How SutraTrace Works Under The Hood</h2>
       <p class="text-secondary small mx-auto mb-0" style="max-width: 640px;">
-        High-throughput vector indexing and evidence-constrained Gemini reasoning combine to guarantee zero-hallucination code fixes.
+        High-throughput ONNX dense vectors and evidence-constrained Gemini reasoning combine to guarantee zero-hallucination code fixes.
       </p>
     </div>
 
-    <!-- Cinematic 3D RAG Flow Banner with Animated Laser Scanline -->
-    <div class="cinematic-glow-container mb-4 position-relative">
-      <div class="scanline-sweep"></div>
-      
-      <img src="{% static 'debugger/img/sutracode_rag_flow.jpg' %}" 
-           alt="SutraCode Grounded RAG Flow Architecture" 
-           class="cinematic-img" 
-           style="max-height: 440px; object-fit: cover;">
-
-      <!-- Floating Glass Pills Overlay -->
-      <div class="cinematic-overlay-bottom">
-        <div class="d-flex flex-wrap gap-2">
-          <span class="glass-pill-tag">
-            <i class="bi bi-file-earmark-pdf text-warning"></i> PyMuPDF Engine
-          </span>
-          <span class="glass-pill-tag">
-            <i class="bi bi-database text-info"></i> ChromaDB ONNX Embeddings
-          </span>
-          <span class="glass-pill-tag">
-            <i class="bi bi-stars text-warning"></i> Gemini Flash Grounding
-          </span>
-          <span class="glass-pill-tag">
-            <i class="bi bi-shield-check text-success"></i> Read-Only Sandbox
-          </span>
-        </div>
-        <div class="d-none d-md-block">
-          <span class="badge bg-dark text-secondary border border-secondary" style="font-size: 0.72rem;">
-            End-to-End Latency: &lt; 380ms
-          </span>
-        </div>
+    <!-- Smooth Dataflow Pulse Beam -->
+    <div class="dataflow-connector-line mb-4 d-none d-lg-flex">
+      <div class="dataflow-pulse-track">
+        <div class="dataflow-pulse-beam"></div>
       </div>
     </div>
 
-    <!-- 4 Connected Pipeline Step Cards -->
-    <div class="pipeline-stepper-grid">
+    <!-- 4 Smooth Interactive Stage Cards -->
+    <div class="row g-3">
       
-      <div class="pipeline-step-item">
-        <div class="pipeline-step-header">
-          <span class="pipeline-step-number">PHASE 01</span>
-          <div class="pipeline-step-icon bg-warning bg-opacity-10 text-warning">
-            <i class="bi bi-file-earmark-arrow-up"></i>
+      <div class="col-md-6 col-lg-3">
+        <div class="smooth-stage-card h-100">
+          <div class="d-flex align-items-center justify-content-between mb-3">
+            <span class="smooth-stage-badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25">PHASE 01</span>
+            <div class="smooth-stage-icon bg-warning bg-opacity-10 text-warning m-0">
+              <i class="bi bi-file-earmark-code"></i>
+            </div>
           </div>
-        </div>
-        <h5 class="h6 fw-bold text-light mb-1">Manual Ingestion</h5>
-        <p class="text-secondary mb-3" style="font-size: 0.78rem; line-height: 1.5;">
-          PyMuPDF parses official PDF & TXT manuals into semantic chunks, preserving section hierarchies with zero data leakage.
-        </p>
-        <div class="pipeline-step-status text-warning">
-          <i class="bi bi-check2-circle me-1"></i> AST Tokenized • PDF & TXT
+          <h5 class="h6 fw-bold mb-2">Manual Ingestion</h5>
+          <p class="text-secondary mb-3" style="font-size: 0.8rem; line-height: 1.55;">
+            PyMuPDF parses official PDF & TXT manuals into semantic chunks, preserving section hierarchies with zero data leakage.
+          </p>
+          <div class="mt-auto pt-2 border-top border-secondary border-opacity-15 font-mono text-warning small" style="font-size: 0.72rem;">
+            <i class="bi bi-check2-circle me-1"></i> AST Tokenized • PDF/TXT
+          </div>
         </div>
       </div>
 
-      <div class="pipeline-step-item">
-        <div class="pipeline-step-header">
-          <span class="pipeline-step-number">PHASE 02</span>
-          <div class="pipeline-step-icon bg-info bg-opacity-10 text-info">
-            <i class="bi bi-search"></i>
+      <div class="col-md-6 col-lg-3">
+        <div class="smooth-stage-card h-100">
+          <div class="d-flex align-items-center justify-content-between mb-3">
+            <span class="smooth-stage-badge bg-info bg-opacity-10 text-info border border-info border-opacity-25">PHASE 02</span>
+            <div class="smooth-stage-icon bg-info bg-opacity-10 text-info m-0">
+              <i class="bi bi-search"></i>
+            </div>
           </div>
-        </div>
-        <h5 class="h6 fw-bold text-light mb-1">Vector Indexing</h5>
-        <p class="text-secondary mb-3" style="font-size: 0.78rem; line-height: 1.5;">
-          ChromaDB vectorizes chunks via 384-dim ONNX embeddings (<span class="font-mono text-light">all-MiniLM-L6-v2</span>) for sub-50ms cosine similarity lookup.
-        </p>
-        <div class="pipeline-step-status text-info">
-          <i class="bi bi-lightning-charge me-1"></i> &lt; 45ms Cosine Match • 384-dim
+          <h5 class="h6 fw-bold mb-2">Dense Vector Index</h5>
+          <p class="text-secondary mb-3" style="font-size: 0.8rem; line-height: 1.55;">
+            ChromaDB vectorizes chunks via 384-dim ONNX embeddings (<span class="font-mono">all-MiniLM-L6-v2</span>) for sub-50ms cosine similarity lookup.
+          </p>
+          <div class="mt-auto pt-2 border-top border-secondary border-opacity-15 font-mono text-info small" style="font-size: 0.72rem;">
+            <i class="bi bi-lightning-charge me-1"></i> &lt; 45ms Cosine Match
+          </div>
         </div>
       </div>
 
-      <div class="pipeline-step-item">
-        <div class="pipeline-step-header">
-          <span class="pipeline-step-number">PHASE 03</span>
-          <div class="pipeline-step-icon bg-warning bg-opacity-10 text-warning">
-            <i class="bi bi-stars"></i>
+      <div class="col-md-6 col-lg-3">
+        <div class="smooth-stage-card h-100">
+          <div class="d-flex align-items-center justify-content-between mb-3">
+            <span class="smooth-stage-badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25">PHASE 03</span>
+            <div class="smooth-stage-icon bg-warning bg-opacity-10 text-warning m-0">
+              <i class="bi bi-stars"></i>
+            </div>
           </div>
-        </div>
-        <h5 class="h6 fw-bold text-light mb-1">Grounded Reasoning</h5>
-        <p class="text-secondary mb-3" style="font-size: 0.78rem; line-height: 1.5;">
-          Gemini Flash synthesizes the root cause strictly bounded by retrieved excerpts. If an API is not in the manual, it cannot be hallucinated.
-        </p>
-        <div class="pipeline-step-status text-warning">
-          <i class="bi bi-shield-check me-1"></i> Zero Hallucination • Grounded
+          <h5 class="h6 fw-bold mb-2">Grounded Reasoning</h5>
+          <p class="text-secondary mb-3" style="font-size: 0.8rem; line-height: 1.55;">
+            Gemini Flash synthesizes the root cause strictly bounded by retrieved excerpts. If an API is not in the manual, it cannot be hallucinated.
+          </p>
+          <div class="mt-auto pt-2 border-top border-secondary border-opacity-15 font-mono text-warning small" style="font-size: 0.72rem;">
+            <i class="bi bi-shield-check me-1"></i> Zero Hallucination
+          </div>
         </div>
       </div>
 
-      <div class="pipeline-step-item">
-        <div class="pipeline-step-header">
-          <span class="pipeline-step-number">PHASE 04</span>
-          <div class="pipeline-step-icon bg-success bg-opacity-10 text-success">
-            <i class="bi bi-patch-check"></i>
+      <div class="col-md-6 col-lg-3">
+        <div class="smooth-stage-card h-100">
+          <div class="d-flex align-items-center justify-content-between mb-3">
+            <span class="smooth-stage-badge bg-success bg-opacity-10 text-success border border-success border-opacity-25">PHASE 04</span>
+            <div class="smooth-stage-icon bg-success bg-opacity-10 text-success m-0">
+              <i class="bi bi-patch-check"></i>
+            </div>
           </div>
-        </div>
-        <h5 class="h6 fw-bold text-light mb-1">Surgical Line Diff</h5>
-        <p class="text-secondary mb-3" style="font-size: 0.78rem; line-height: 1.5;">
-          Generates a clean unified diff plus verbatim documentation citations and a verification assertion test for local validation.
-        </p>
-        <div class="pipeline-step-status text-success">
-          <i class="bi bi-code-slash me-1"></i> Production-Ready Unified Diff
+          <h5 class="h6 fw-bold mb-2">Surgical Line Diff</h5>
+          <p class="text-secondary mb-3" style="font-size: 0.8rem; line-height: 1.55;">
+            Generates a clean unified diff plus verbatim documentation citations and a verification assertion test for local validation.
+          </p>
+          <div class="mt-auto pt-2 border-top border-secondary border-opacity-15 font-mono text-success small" style="font-size: 0.72rem;">
+            <i class="bi bi-code-slash me-1"></i> Production-Ready Patch
+          </div>
         </div>
       </div>
 
@@ -211,7 +177,7 @@
 
   </div>
 
-  <!-- SECTION 2: REVAMPED REAL-WORLD DEFECT BENCHMARK (macOS IDE Style) -->
+  <!-- SECTION 2: REVAMPED REAL-WORLD DEFECT BENCHMARK (Clean macOS IDE Frames) -->
   <div class="my-5 pt-4">
     
     <!-- Title & Context -->
@@ -220,7 +186,7 @@
         <i class="bi bi-exclamation-triangle text-danger small"></i>
         <span class="text-danger fw-bold text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.08em;">CRITICAL PRODUCTION BENCHMARK</span>
       </div>
-      <h2 class="h3 fw-bold text-light">The "3:00 AM Socket Freeze": Understandable in 30 Seconds</h2>
+      <h2 class="h3 fw-bold mb-2">The "3:00 AM Socket Freeze": Understandable in 30 Seconds</h2>
       <p class="text-secondary small mx-auto mb-0" style="max-width: 700px;">
         Standard AI assistants guess or rewrite dozens of lines. SutraTrace pulls the official technical manual and applies a 2-line surgical fix.
       </p>
@@ -235,7 +201,7 @@
           <span class="badge bg-danger bg-opacity-20 text-danger border border-danger border-opacity-40" style="font-size: 0.72rem; font-weight: 700;">
             DEFECT DETECTED
           </span>
-          <span class="text-light fw-bold">Python Requests Socket Leak & Indefinite Hang</span>
+          <span class="fw-bold">Python Requests Socket Leak & Indefinite Hang</span>
         </div>
         <div class="d-flex align-items-center gap-2">
           <span class="badge bg-dark text-warning border border-warning border-opacity-40" style="font-size: 0.72rem;">
@@ -249,18 +215,18 @@
         
         <!-- Left: Buggy IDE Window -->
         <div class="col-lg-6">
-          <div class="ide-window-frame h-100 d-flex flex-column">
-            <div class="ide-window-header">
-              <div class="ide-dots-wrapper">
-                <span class="ide-dot ide-dot-red"></span>
-                <span class="ide-dot ide-dot-yellow"></span>
-                <span class="ide-dot ide-dot-green"></span>
+          <div class="macos-ide-window h-100 d-flex flex-column">
+            <div class="macos-ide-titlebar">
+              <div class="macos-traffic-lights">
+                <span class="macos-dot macos-dot-close"></span>
+                <span class="macos-dot macos-dot-min"></span>
+                <span class="macos-dot macos-dot-max"></span>
               </div>
-              <span class="ide-window-title">buggy_service.py</span>
+              <span class="font-mono text-secondary small" style="font-size: 0.74rem;">buggy_requests.py</span>
               <span class="badge bg-danger bg-opacity-20 text-danger" style="font-size: 0.65rem;">HANGS INDEFINITELY</span>
             </div>
             
-            <div class="ide-window-body flex-grow-1">
+            <div class="macos-ide-editor flex-grow-1">
               <pre class="m-0"><code class="language-python">def fetch_user_data(user_id):
     url = f"https://api.example.com/users/{user_id}"
     # ❌ SILENT DEFECT: requests has NO timeout by default!
@@ -279,18 +245,18 @@
 
         <!-- Right: Verified Patch IDE Window -->
         <div class="col-lg-6">
-          <div class="ide-window-frame h-100 d-flex flex-column">
-            <div class="ide-window-header">
-              <div class="ide-dots-wrapper">
-                <span class="ide-dot ide-dot-red"></span>
-                <span class="ide-dot ide-dot-yellow"></span>
-                <span class="ide-dot ide-dot-green"></span>
+          <div class="macos-ide-window h-100 d-flex flex-column">
+            <div class="macos-ide-titlebar">
+              <div class="macos-traffic-lights">
+                <span class="macos-dot macos-dot-close"></span>
+                <span class="macos-dot macos-dot-min"></span>
+                <span class="macos-dot macos-dot-max"></span>
               </div>
-              <span class="ide-window-title">verified_patch.py</span>
+              <span class="font-mono text-secondary small" style="font-size: 0.74rem;">verified_patch.py</span>
               <span class="badge bg-success bg-opacity-20 text-success" style="font-size: 0.65rem;">FAIL-SAFE GUARANTEED</span>
             </div>
 
-            <div class="ide-window-body flex-grow-1">
+            <div class="macos-ide-editor flex-grow-1">
               <pre class="m-0"><code class="language-python">def fetch_user_data(user_id):
     url = f"https://api.example.com/users/{user_id}"
     # ✅ SUTRATRACE FIX: Connect (3.05s) / Read (10s) timeout
@@ -310,7 +276,7 @@
       </div>
 
       <!-- Verifiable Official Documentation Citation Callout Box -->
-      <div class="p-3 rounded border border-warning border-opacity-25" style="background: rgba(245, 158, 11, 0.04);">
+      <div class="citation-box p-3 rounded">
         <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-2">
           <div class="d-flex align-items-center gap-2">
             <i class="bi bi-patch-check-fill text-warning"></i>
@@ -322,7 +288,7 @@
             Cosine Similarity: 0.89 • Retrieved Chunk #1
           </span>
         </div>
-        <blockquote class="text-light mb-2 font-mono small" style="font-size: 0.84rem; line-height: 1.6; border-left: 2px solid var(--accent-amber); padding-left: 0.75rem;">
+        <blockquote class="mb-2 font-mono small" style="font-size: 0.84rem; line-height: 1.6; border-left: 2px solid var(--accent-amber); padding-left: 0.75rem;">
           "Nearly all production requests should specify a timeout parameter to avoid hanging threads indefinitely... If no timeout is specified, Requests will wait forever for a socket response."
         </blockquote>
         <div class="text-muted small" style="font-size: 0.74rem;">
@@ -330,24 +296,6 @@
         </div>
       </div>
 
-    </div>
-
-    <!-- Companion Visual: Dual Terminal Verification Screen -->
-    <div class="cinematic-glow-container position-relative">
-      <img src="{% static 'debugger/img/sutracode_diff_verify.jpg' %}" 
-           alt="SutraCode Dual Terminal Verification Screen" 
-           class="cinematic-img" 
-           style="max-height: 380px; object-fit: cover;">
-      
-      <div class="cinematic-overlay-bottom">
-        <div>
-          <span class="fw-bold text-light small d-block">Dual-Screen Real-Time Visual Diff Inspection</span>
-          <span class="text-secondary" style="font-size: 0.75rem;">Color-coded unified diff view makes inspecting code changes instantaneous for engineers and reviewers.</span>
-        </div>
-        <a href="{% url 'debugger:debugger' %}" class="btn btn-sutra-primary btn-sm py-1 px-3">
-          Try Live Demo <i class="bi bi-arrow-right"></i>
-        </a>
-      </div>
     </div>
 
   </div>
@@ -361,7 +309,7 @@
           <div class="d-inline-flex p-2 rounded-circle bg-warning bg-opacity-10 text-warning mb-3">
             <i class="bi bi-shield-shaded fs-4"></i>
           </div>
-          <h4 class="h6 fw-bold text-light mb-2">Zero-Execution Sandbox</h4>
+          <h4 class="h6 fw-bold mb-2">Zero-Execution Sandbox</h4>
           <p class="text-secondary small mb-0" style="line-height: 1.6;">
             Untrusted user code is analyzed purely as text and AST tokens. Code is never run in containers or host shells, eliminating remote execution attack vectors.
           </p>
@@ -373,7 +321,7 @@
           <div class="d-inline-flex p-2 rounded-circle bg-success bg-opacity-10 text-success mb-3">
             <i class="bi bi-journal-bookmark fs-4"></i>
           </div>
-          <h4 class="h6 fw-bold text-light mb-2">Mathematical Grounding</h4>
+          <h4 class="h6 fw-bold mb-2">Mathematical Grounding</h4>
           <p class="text-secondary small mb-0" style="line-height: 1.6;">
             Every proposed fix requires source manual chunks. If similarity scores fall below threshold, SutraTrace flags the diagnosis as ungrounded rather than guessing.
           </p>
@@ -385,9 +333,9 @@
           <div class="d-inline-flex p-2 rounded-circle bg-info bg-opacity-10 text-info mb-3">
             <i class="bi bi-git fs-4"></i>
           </div>
-          <h4 class="h6 fw-bold text-light mb-2">Production-Ready Diffs</h4>
+          <h4 class="h6 fw-bold mb-2">Production-Ready Diffs</h4>
           <p class="text-secondary small mb-0" style="line-height: 1.6;">
-            Outputs surgical standard unified diffs (<span class="font-mono text-light">--- a/ +++ b/</span>) that can be reviewed, piped directly to git patch, or committed cleanly.
+            Outputs surgical standard unified diffs (<span class="font-mono">--- a/ +++ b/</span>) that can be reviewed, piped directly to git patch, or committed cleanly.
           </p>
         </div>
       </div>
@@ -396,8 +344,8 @@
   </div>
 
   <!-- BOTTOM CALL-TO-ACTION -->
-  <div class="text-center py-5 my-4 sutra-card p-5" style="background: radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.08) 0%, rgba(14, 18, 26, 0.95) 70%);">
-    <h3 class="display-6 fw-bold text-light mb-3">Ready to eliminate hallucinated debugging?</h3>
+  <div class="text-center py-5 my-4 sutra-card cta-banner-card p-5">
+    <h3 class="display-6 fw-bold mb-3">Ready to eliminate hallucinated debugging?</h3>
     <p class="text-secondary small mx-auto mb-4" style="max-width: 500px;">
       Upload your technical manual or test our pre-indexed Python documentation right inside the interactive workspace.
     </p>
