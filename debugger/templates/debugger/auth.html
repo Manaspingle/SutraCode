@@ -1,0 +1,218 @@
+{% extends 'debugger/base.html' %}
+{% load static %}
+
+{% block title %}Developer Authentication — SutraTrace{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper d-flex align-items-center justify-content-center py-5">
+  
+  <!-- Ambient Glow Halo Background -->
+  <div class="auth-ambient-glow"></div>
+
+  <div class="auth-card-container position-relative" style="width: 100%; max-width: 440px; z-index: 2;">
+    
+    <!-- Branding Header -->
+    <div class="text-center mb-4">
+      <div class="d-inline-flex align-items-center justify-content-center mb-3">
+        <div class="brand-icon-wrapper">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="16" cy="16" r="14" stroke="#F59E0B" stroke-width="2" stroke-dasharray="6 3"/>
+            <path d="M10 16L14 20L22 12" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="22" cy="12" r="2.5" fill="#FFFFFF"/>
+          </svg>
+        </div>
+      </div>
+      <h2 class="h4 fw-bold text-light mb-1" id="authTitle">Welcome to SutraTrace</h2>
+      <p class="small text-secondary mb-0" id="authSubtitle">
+        Sign in to access your private document vault and analysis history.
+      </p>
+    </div>
+
+    <!-- Auth Card -->
+    <div class="sutra-card p-4 auth-box">
+      
+      <!-- Tab Switcher -->
+      <div class="auth-tabs d-flex p-1 rounded-pill mb-4" style="background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border-subtle);">
+        <button type="button" class="btn btn-sm flex-fill rounded-pill py-2 fw-semibold {% if mode != 'signup' %}btn-auth-tab-active{% else %}text-secondary{% endif %}" id="tabSignIn" onclick="switchAuthMode('login')">
+          Sign In
+        </button>
+        <button type="button" class="btn btn-sm flex-fill rounded-pill py-2 fw-semibold {% if mode == 'signup' %}btn-auth-tab-active{% else %}text-secondary{% endif %}" id="tabSignUp" onclick="switchAuthMode('signup')">
+          Create Account
+        </button>
+      </div>
+
+      <!-- Google 1-Tap Sign In Button -->
+      <button type="button" class="btn btn-google-sutra w-100 py-2 mb-3 d-flex align-items-center justify-content-center gap-2 fw-semibold" onclick="handleAuthGoogle()">
+        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+        <span id="googleBtnLabel">Continue with Google</span>
+      </button>
+
+      <!-- Divider -->
+      <div class="position-relative text-center my-3">
+        <hr class="border-secondary opacity-25 m-0">
+        <span class="position-absolute top-50 start-50 translate-middle px-2 text-muted small" style="background: var(--bg-surface); font-size: 0.72rem; letter-spacing: 0.05em;">
+          OR USE EMAIL
+        </span>
+      </div>
+
+      <!-- Auth Form -->
+      <form id="authPageForm" onsubmit="handleAuthSubmit(event)">
+        <input type="hidden" id="authModeInput" value="{{ mode|default:'login' }}">
+        <input type="hidden" id="nextUrlInput" value="{{ next_url|default:'/debugger/' }}">
+
+        <div class="mb-3 d-none" id="nameFieldGroup">
+          <label class="form-label small text-secondary fw-semibold">Your Name</label>
+          <input type="text" id="authNameInput" class="form-control" placeholder="Developer Name">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label small text-secondary fw-semibold">Email Address</label>
+          <input type="email" id="authEmailInput" class="form-control" placeholder="you@domain.com" required>
+        </div>
+
+        <div class="mb-4">
+          <div class="d-flex justify-content-between align-items-center mb-1">
+            <label class="form-label small text-secondary fw-semibold m-0">Password</label>
+            <span class="small text-muted" id="passwordHint" style="font-size: 0.72rem;">Min. 6 characters</span>
+          </div>
+          <input type="password" id="authPasswordInput" class="form-control" placeholder="••••••••" minlength="6" required>
+        </div>
+
+        <button type="submit" id="authSubmitBtn" class="btn btn-sutra-primary w-100 py-2 fw-semibold">
+          Sign In
+        </button>
+
+        <div id="authAlert" class="alert alert-danger small p-2 mt-3 d-none"></div>
+      </form>
+
+    </div>
+
+    <!-- Security & Privacy note -->
+    <div class="text-center mt-3 text-muted small" style="font-size: 0.75rem;">
+      <i class="bi bi-shield-check text-success me-1"></i> Firebase Authentication & Vector Isolation Active
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+let currentAuthMode = '{{ mode|default:"login" }}';
+
+function switchAuthMode(mode) {
+  currentAuthMode = mode;
+  document.getElementById('authModeInput').value = mode;
+
+  const tabIn = document.getElementById('tabSignIn');
+  const tabUp = document.getElementById('tabSignUp');
+  const nameGroup = document.getElementById('nameFieldGroup');
+  const submitBtn = document.getElementById('authSubmitBtn');
+  const title = document.getElementById('authTitle');
+  const subtitle = document.getElementById('authSubtitle');
+  const googleLabel = document.getElementById('googleBtnLabel');
+
+  if (mode === 'signup') {
+    tabUp.className = 'btn btn-sm flex-fill rounded-pill py-2 fw-semibold btn-auth-tab-active';
+    tabIn.className = 'btn btn-sm flex-fill rounded-pill py-2 fw-semibold text-secondary';
+    nameGroup.classList.remove('d-none');
+    submitBtn.textContent = 'Create Account';
+    title.textContent = 'Start with SutraTrace';
+    subtitle.textContent = 'Create your developer account to begin evidence-grounded debugging.';
+    googleLabel.textContent = 'Sign up with Google';
+  } else {
+    tabIn.className = 'btn btn-sm flex-fill rounded-pill py-2 fw-semibold btn-auth-tab-active';
+    tabUp.className = 'btn btn-sm flex-fill rounded-pill py-2 fw-semibold text-secondary';
+    nameGroup.classList.add('d-none');
+    submitBtn.textContent = 'Sign In';
+    title.textContent = 'Welcome to SutraTrace';
+    subtitle.textContent = 'Sign in to access your private document vault and analysis history.';
+    googleLabel.textContent = 'Continue with Google';
+  }
+}
+
+async function syncSessionWithBackend(idToken) {
+  const nextUrl = document.getElementById('nextUrlInput').value || '/debugger/';
+  try {
+    const res = await fetch('/api/auth/session-login/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken') || ''
+      },
+      body: JSON.stringify({ id_token: idToken })
+    });
+    const data = await res.json();
+    if (data.success) {
+      window.location.href = nextUrl;
+    } else {
+      showAuthError(data.error || 'Session synchronization failed.');
+    }
+  } catch (err) {
+    showAuthError('Network error connecting to backend.');
+  }
+}
+
+async function handleAuthGoogle() {
+  if (!window.auth) {
+    showAuthError("Firebase Auth is initializing. Please retry in 1 second.");
+    return;
+  }
+  const provider = new firebase.auth.GoogleAuthProvider();
+  try {
+    const result = await window.auth.signInWithPopup(provider);
+    const token = await result.user.getIdToken();
+    await syncSessionWithBackend(token);
+  } catch (err) {
+    showAuthError(err.message);
+  }
+}
+
+async function handleAuthSubmit(e) {
+  e.preventDefault();
+  if (!window.auth) return;
+
+  const email = document.getElementById('authEmailInput').value.trim();
+  const password = document.getElementById('authPasswordInput').value;
+  const name = document.getElementById('authNameInput')?.value.trim();
+  const submitBtn = document.getElementById('authSubmitBtn');
+
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Authenticating...';
+
+  try {
+    let userCredential;
+    if (currentAuthMode === 'signup') {
+      userCredential = await window.auth.createUserWithEmailAndPassword(email, password);
+      if (name && userCredential.user) {
+        await userCredential.user.updateProfile({ displayName: name });
+      }
+    } else {
+      userCredential = await window.auth.signInWithEmailAndPassword(email, password);
+    }
+
+    const token = await userCredential.user.getIdToken();
+    await syncSessionWithBackend(token);
+  } catch (err) {
+    showAuthError(err.message);
+    submitBtn.disabled = false;
+    submitBtn.textContent = currentAuthMode === 'signup' ? 'Create Account' : 'Sign In';
+  }
+}
+
+function showAuthError(msg) {
+  const alertEl = document.getElementById('authAlert');
+  if (alertEl) {
+    alertEl.textContent = msg;
+    alertEl.classList.remove('d-none');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (currentAuthMode === 'signup') {
+    switchAuthMode('signup');
+  }
+});
+</script>
+{% endblock %}

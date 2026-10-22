@@ -1,12 +1,12 @@
 import os
 import json
 import logging
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseForbidden
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.conf import settings
-from django.core.files.storage import default_storage
+from django.urls import reverse
 
 from debugger.models import UploadedDocument, DocumentChunk, AnalysisRecord
 from debugger.forms import CodeAnalysisForm, DocumentUploadForm
@@ -20,11 +20,20 @@ logger = logging.getLogger(__name__)
 
 def _get_request_user(request) -> dict:
     """Helper to extract verified Firebase user or guest identity from request."""
+    # 1. Check verified Firebase user stored in Django session
+    session_user = request.session.get('firebase_user')
+    if session_user and session_user.get('is_authenticated'):
+        return session_user
+
+    # 2. Check Authorization header
     auth_header = request.headers.get('Authorization', '')
     if auth_header:
-        return firebase_service.verify_token(auth_header)
-    
-    # Check session for guest user id
+        verified = firebase_service.verify_token(auth_header)
+        if verified.get('is_authenticated'):
+            request.session['firebase_user'] = verified
+            return verified
+
+    # 3. Fallback to guest identity
     guest_uid = request.session.get('guest_uid')
     if not guest_uid:
         import uuid
@@ -34,7 +43,7 @@ def _get_request_user(request) -> dict:
     return {
         'uid': guest_uid,
         'email': '',
-        'name': 'Local Developer',
+        'name': 'Guest Developer',
         'picture': '',
         'is_authenticated': False,
     }
@@ -46,11 +55,12 @@ def _get_request_user(request) -> dict:
 @ensure_csrf_cookie
 def landing_view(request):
     """Product Landing Page."""
-    return render(request, 'debugger/landing.html')
+    user = _get_request_user(request)
+    return render(request, 'debugger/landing.html', {'user': user})
 
 @ensure_csrf_cookie
 def debugger_view(request):
-    """Full-featured Debugging Workspace."""
+    """Optimal, developer-first Debugging Workspace."""
     user = _get_request_user(request)
     form = CodeAnalysisForm()
     upload_form = DocumentUploadForm()
@@ -64,7 +74,6 @@ def debugger_view(request):
 def results_view(request, analysis_id):
     """Dedicated Analysis Results Page."""
     user = _get_request_user(request)
-    # Allow user to view their analysis, or any if guest
     record = get_object_or_404(AnalysisRecord, id=analysis_id)
     return render(request, 'debugger/results.html', {
         'record': record,
@@ -73,8 +82,11 @@ def results_view(request, analysis_id):
 
 @ensure_csrf_cookie
 def history_view(request):
-    """Analysis History View."""
+    """Analysis History View (Protected: requires sign-in/sign-up)."""
     user = _get_request_user(request)
+    if not user.get('is_authenticated'):
+        return redirect(f"{reverse('debugger:login')}?next={request.path}")
+
     records = AnalysisRecord.objects.filter(user_id=user['uid'])[:50]
     return render(request, 'debugger/history.html', {
         'records': records,
@@ -83,13 +95,67 @@ def history_view(request):
 
 @ensure_csrf_cookie
 def how_it_works_view(request):
-    """Interactive architecture and RAG documentation page."""
-    return render(request, 'debugger/how_it_works.html')
+    """Architecture and RAG documentation page (Protected: requires sign-in/sign-up)."""
+    user = _get_request_user(request)
+    if not user.get('is_authenticated'):
+        return redirect(f"{reverse('debugger:login')}?next={request.path}")
+
+    return render(request, 'debugger/how_it_works.html', {'user': user})
+
+@ensure_csrf_cookie
+def auth_view(request):
+    """Unified Sign-In and Sign-Up page."""
+    user = _get_request_user(request)
+    next_url = request.GET.get('next', reverse('debugger:debugger'))
+    mode = request.GET.get('mode', 'login')
+
+    if user.get('is_authenticated'):
+        return redirect(next_url)
+
+    return render(request, 'debugger/auth.html', {
+        'next_url': next_url,
+        'mode': mode,
+        'user': user
+    })
+
+def logout_view(request):
+    """Logs out user and clears session."""
+    if 'firebase_user' in request.session:
+        del request.session['firebase_user']
+    return redirect(reverse('debugger:landing'))
 
 
 # ==========================================
 # REST API Endpoints
 # ==========================================
+
+@require_http_methods(["POST"])
+def api_session_login(request):
+    """Verifies Firebase ID token and links to Django session."""
+    try:
+        data = json.loads(request.body)
+        id_token = data.get('id_token')
+        if not id_token:
+            return JsonResponse({'success': False, 'error': 'Missing ID token.'}, status=400)
+
+        verified = firebase_service.verify_token(f"Bearer {id_token}")
+        if not verified.get('is_authenticated'):
+            return JsonResponse({'success': False, 'error': 'Invalid authentication token.'}, status=401)
+
+        request.session['firebase_user'] = verified
+        request.session.modified = True
+        return JsonResponse({'success': True, 'user': verified})
+    except Exception as e:
+        logger.error("Session login error: %s", str(e))
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+@require_http_methods(["POST"])
+def api_session_logout(request):
+    """Clears authenticated session."""
+    if 'firebase_user' in request.session:
+        del request.session['firebase_user']
+    request.session.modified = True
+    return JsonResponse({'success': True})
 
 @require_http_methods(["POST"])
 def api_upload_document(request):
@@ -100,12 +166,10 @@ def api_upload_document(request):
     if not upload_file:
         return JsonResponse({'success': False, 'error': 'No file uploaded.'}, status=400)
 
-    # Validate file format and size
     is_valid, err = document_processor.validate_file(upload_file)
     if not is_valid:
         return JsonResponse({'success': False, 'error': err}, status=400)
 
-    # Save to disk
     user_upload_dir = os.path.join(settings.MEDIA_ROOT, 'documents', str(user['uid']))
     os.makedirs(user_upload_dir, exist_ok=True)
     file_path = os.path.join(user_upload_dir, upload_file.name)
@@ -116,7 +180,6 @@ def api_upload_document(request):
 
     ext = os.path.splitext(upload_file.name)[1].lower().replace('.', '')
 
-    # Create DB record
     doc_record = UploadedDocument.objects.create(
         user_id=user['uid'],
         filename=upload_file.name,
@@ -127,7 +190,6 @@ def api_upload_document(request):
     )
 
     try:
-        # Extract and chunk
         chunks, total_pages = document_processor.extract_text_and_chunks(
             file_path=file_path,
             filename=upload_file.name,
@@ -135,10 +197,8 @@ def api_upload_document(request):
             user_id=user['uid']
         )
 
-        # Index in ChromaDB
         indexed_count = retriever.index_chunks(chunks)
 
-        # Persist chunks in SQLite
         chunk_objs = [
             DocumentChunk(
                 document=doc_record,
@@ -153,7 +213,6 @@ def api_upload_document(request):
         ]
         DocumentChunk.objects.bulk_create(chunk_objs)
 
-        # Update document record
         doc_record.page_count = total_pages
         doc_record.chunk_count = indexed_count
         doc_record.status = 'ready'
@@ -218,19 +277,15 @@ def api_delete_document(request, doc_id):
     except UploadedDocument.DoesNotExist:
         return JsonResponse({'success': False, 'error': 'Document not found.'}, status=404)
 
-    # 1. Remove chunks from ChromaDB
     retriever.delete_document_chunks(doc_id=str(doc.id), user_id=user['uid'])
 
-    # 2. Remove file from disk
     if os.path.exists(doc.file_path):
         try:
             os.remove(doc.file_path)
         except OSError as e:
             logger.warning("Could not delete file from disk: %s", str(e))
 
-    # 3. Delete database record (cascades to chunks)
     doc.delete()
-
     return JsonResponse({'success': True, 'message': 'Document removed from index.'})
 
 
@@ -239,7 +294,6 @@ def api_analyze(request):
     """Analyzes submitted code with RAG vector search and Gemini reasoning."""
     user = _get_request_user(request)
 
-    # Parse JSON or form data
     if request.content_type == 'application/json':
         try:
             body = json.loads(request.body)
@@ -323,7 +377,6 @@ def api_load_sample_doc(request):
     with open(sample_path, 'r', encoding='utf-8') as f:
         content = f.read()
 
-    # Save to user folder
     user_upload_dir = os.path.join(settings.MEDIA_ROOT, 'documents', str(user['uid']))
     os.makedirs(user_upload_dir, exist_ok=True)
     dest_path = os.path.join(user_upload_dir, filename)

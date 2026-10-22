@@ -19,18 +19,38 @@ class SutraTraceUnitTests(TestCase):
         self.client = Client()
         self.user_id = "test_user_123"
 
-    def test_pages_load_successfully(self):
-        """Tests that landing, debugger, history, and how-it-works views return 200 OK."""
-        urls = [
+    def test_pages_load_and_auth_protection(self):
+        """Tests public page loading and protected route redirects for unauthenticated users."""
+        public_urls = [
             reverse('debugger:landing'),
             reverse('debugger:debugger'),
-            reverse('debugger:history'),
-            reverse('debugger:how_it_works'),
+            reverse('debugger:login'),
+            reverse('debugger:signup'),
         ]
-        for url in urls:
+        for url in public_urls:
             response = self.client.get(url)
             self.assertEqual(response.status_code, 200, f"Failed on URL: {url}")
             self.assertContains(response, "SutraTrace")
+
+        # Unauthenticated access to history and how-it-works must redirect to login
+        for protected_url in [reverse('debugger:history'), reverse('debugger:how_it_works')]:
+            response = self.client.get(protected_url)
+            self.assertEqual(response.status_code, 302)
+            self.assertIn(reverse('debugger:login'), response.url)
+
+        # Authenticated access succeeds
+        session = self.client.session
+        session['firebase_user'] = {
+            'uid': self.user_id,
+            'email': 'developer@test.com',
+            'name': 'Test Developer',
+            'is_authenticated': True
+        }
+        session.save()
+
+        for protected_url in [reverse('debugger:history'), reverse('debugger:how_it_works')]:
+            response = self.client.get(protected_url)
+            self.assertEqual(response.status_code, 200, f"Authenticated failed on: {protected_url}")
 
     def test_file_validation_rejects_unsupported_extensions(self):
         """Tests that unsupported file extensions (e.g. .exe, .py) are rejected."""
