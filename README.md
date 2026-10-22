@@ -186,3 +186,38 @@ Open your browser to: **[http://127.0.0.1:8000/](http://127.0.0.1:8000/)**
 - **Untrusted Content Demarcation:** System instructions explicitly order Gemini to ignore prompt-injection commands embedded inside user files or code comments.
 - **Per-User Isolation:** ChromaDB vector queries filter on `where={"user_id": uid}`, guaranteeing that users cannot retrieve another developer's private documentation.
 - **Clean Document Purging:** Deleting a document removes associated vectors from ChromaDB without altering other indexes.
+
+---
+
+## 🎨 UI/UX Theme & Shadcn Component Integration
+
+The repository provides both:
+1. **Live Full-Stack Django Web Application:**
+   - **Dark & Light Mode Switcher:** Instant theme switching in the navbar with solar amber / emerald dark mode and clean modern light mode, persisted via `localStorage`.
+   - **Interactive 3D Rotating Globe:** Pure CSS planetary atmosphere shader with twinkling cosmic stars, orbit telemetry badges, and smooth hover responsiveness.
+   - **4-Stage Neural RAG Pipeline Stepper:** Step-by-step interactive workflow visualizer.
+   - **macOS IDE Code Frames:** Dual code defect vs verified fix windows with control dots, unified diffs, and official manual citations.
+2. **Standardized `/components/ui/` React & Shadcn Structure:**
+   - Located in [`/components/ui/`](file:///d:/SutraCode/components/ui/):
+     - [`components/ui/globe.tsx`](file:///d:/SutraCode/components/ui/globe.tsx): Pure CSS 3D rotating planetary sphere with twinkling stars and atmospheric rim lights.
+     - [`components/ui/landing-page.tsx`](file:///d:/SutraCode/components/ui/landing-page.tsx): Reusable `ScrollGlobe` component following shadcn patterns.
+     - [`components/ui/demo.tsx`](file:///d:/SutraCode/components/ui/demo.tsx): Demo harness component.
+     - [`lib/utils.ts`](file:///d:/SutraCode/lib/utils.ts): `cn()` class merger utility.
+
+### Why `/components/ui` Is Standard
+In the shadcn/ui ecosystem, `/components/ui` is the designated directory for low-level, reusable primitive components. Keeping primitives isolated from domain-specific features ensures maximum composability, clean imports (`@/components/ui/...`), and compatibility with the shadcn CLI:
+```bash
+npx shadcn@latest init
+npm install clsx tailwind-merge lucide-react
+```
+
+---
+
+## 🚀 Cloud Deployment on Render
+
+SutraTrace is pre-configured for seamless cloud deployment on [Render](https://render.com):
+- **[`render.yaml`](file:///d:/SutraCode/render.yaml)**: Web service blueprint with Python 3.12, environment bindings, build command, and start command.
+- **[`build.sh`](file:///d:/SutraCode/build.sh)**: Executable deployment script (`pip install`, `collectstatic`, `migrate`).
+- **[`Procfile`](file:///d:/SutraCode/Procfile)**: `web: gunicorn config.wsgi:application --bind 0.0.0.0:$PORT`
+- **Static Assets**: Handled seamlessly in production by WhiteNoise (`CompressedStaticFilesStorage`).
+

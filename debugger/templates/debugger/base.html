@@ -21,6 +21,14 @@
 
   <!-- Custom Design Tokens & Cinematic Theme -->
   <link rel="stylesheet" href="{% static 'debugger/css/main.css' %}">
+
+  <!-- Early Theme Init to Prevent FOUC -->
+  <script>
+    (function() {
+      const theme = localStorage.getItem('sutra_theme') || 'dark';
+      document.documentElement.setAttribute('data-bs-theme', theme);
+    })();
+  </script>
   {% block extra_head %}{% endblock %}
 </head>
 <body>
@@ -67,6 +75,12 @@
 
         <!-- Right Side: Auth Status & Actions -->
         <div class="nav-actions-wrapper d-flex align-items-center gap-2 mt-3 mt-lg-0 pt-2 pt-lg-0">
+          <!-- Theme Mode Switcher -->
+          <button id="themeToggleBtn" type="button" class="btn btn-sm btn-sutra-secondary rounded-circle p-0 d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;" title="Toggle Dark/Light Mode" onclick="toggleSutraTheme()">
+            <i class="bi bi-sun-fill text-warning" id="themeIconSun"></i>
+            <i class="bi bi-moon-stars-fill text-info d-none" id="themeIconMoon"></i>
+          </button>
+
           <div id="authStatusChip" class="{% if not user.is_authenticated %}d-none{% endif %}">
             {% if user.is_authenticated %}
             <div class="user-chip">
@@ -214,6 +228,31 @@
     window.FIREBASE_CONFIG = {{ FIREBASE_CONFIG_JSON|safe }};
   </script>
   <script src="{% static 'debugger/js/firebase-init.js' %}"></script>
+
+  <!-- Theme Toggle Controller -->
+  <script>
+    function updateThemeIcons() {
+      const current = document.documentElement.getAttribute('data-bs-theme') || 'dark';
+      const sun = document.getElementById('themeIconSun');
+      const moon = document.getElementById('themeIconMoon');
+      if (!sun || !moon) return;
+      if (current === 'light') {
+        sun.classList.add('d-none');
+        moon.classList.remove('d-none');
+      } else {
+        sun.classList.remove('d-none');
+        moon.classList.add('d-none');
+      }
+    }
+    function toggleSutraTheme() {
+      const current = document.documentElement.getAttribute('data-bs-theme') || 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-bs-theme', next);
+      localStorage.setItem('sutra_theme', next);
+      updateThemeIcons();
+    }
+    document.addEventListener('DOMContentLoaded', updateThemeIcons);
+  </script>
   {% block extra_scripts %}{% endblock %}
 </body>
 </html>
