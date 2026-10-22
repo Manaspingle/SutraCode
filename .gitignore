@@ -1,0 +1,27 @@
+# Virtual Environment
+.venv/
+venv/
+ENV/
+
+# Secrets & Environment variables
+.env
+*.pem
+*.key
+
+# Django & Database
+*.sqlite3
+db.sqlite3
+media/
+data/
+data/chromadb/
+AI Engineer Coding Reference/
+__pycache__/
+*.py[cod]
+*$py.class
+*.log
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

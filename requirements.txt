@@ -1,0 +1,10 @@
+django>=5.1
+google-genai>=2.30.0
+firebase-admin>=7.7.0
+pymupdf>=2.0
+chromadb>=1.5.0
+sentence-transformers>=6.2.0
+python-dotenv>=1.2.0
+requests>=2.32.0
+pydantic>=2.10.0
+onnxruntime>=1.20.0
