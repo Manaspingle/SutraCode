@@ -2,11 +2,11 @@ services:
   - type: web
     name: sutracode
     runtime: python
-    buildCommand: "./build.sh"
+    buildCommand: "chmod +x build.sh && ./build.sh"
     startCommand: "gunicorn config.wsgi:application --bind 0.0.0.0:$PORT"
     envVars:
       - key: PYTHON_VERSION
-        value: 3.12.12
+        value: 3.12.7
       - key: DEBUG
         value: "False"
       - key: SECRET_KEY
