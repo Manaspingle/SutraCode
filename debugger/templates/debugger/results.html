@@ -4,161 +4,115 @@
 {% block title %}Analysis #{{ record.id|stringformat:".8s" }} — SutraTrace{% endblock %}
 
 {% block content %}
-<div class="container py-4">
+<div class="container py-4" style="max-width: 1100px;">
 
-  <!-- Top Breadcrumb & Actions -->
-  <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+  <!-- Breadcrumb & Top Bar -->
+  <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
     <div>
       <a href="{% url 'debugger:history' %}" class="btn btn-link text-secondary p-0 text-decoration-none small mb-1 d-inline-block">
-        <i class="bi bi-arrow-left"></i> Back to History
+        <i class="bi bi-arrow-left"></i> History
       </a>
-      <h2 class="h3 fw-bold m-0 text-light">Analysis Details</h2>
-      <div class="text-muted small">Session ID: <span class="font-mono">{{ record.id }}</span> • {{ record.created_at|date:"M d, Y H:i" }}</div>
+      <h2 class="h5 fw-bold m-0 text-light">Analysis Details</h2>
+      <div class="text-muted small" style="font-size: 0.75rem;">Session: <span class="font-mono">{{ record.id }}</span> • {{ record.created_at|date:"M d, Y H:i" }}</div>
     </div>
     <div class="d-flex align-items-center gap-2">
       <a href="{% url 'debugger:debugger' %}" class="btn btn-sutra-primary btn-sm">
-        <i class="bi bi-plus-circle"></i> New Analysis
+        <i class="bi bi-plus-circle"></i> New Session
       </a>
     </div>
   </div>
 
-  <div class="sutra-card">
+  <div class="sutra-card p-4">
     
-    <!-- Status & Severity Banner -->
-    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 pb-3 mb-4 border-bottom border-secondary border-opacity-25">
+    <!-- Top Result Banner -->
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 pb-3 mb-3 border-bottom border-secondary border-opacity-25">
       <div class="d-flex align-items-center gap-2">
         <span class="badge badge-severity badge-{{ record.severity }}">{{ record.severity|upper }}</span>
-        <span class="badge bg-dark text-info border border-info">{{ record.language|upper }}</span>
+        <span class="badge bg-dark text-secondary border border-secondary" style="font-size: 0.72rem;">{{ record.language|upper }}</span>
+        <span class="fw-bold text-light small">{{ record.diagnosis_summary }}</span>
       </div>
       <div>
         {% if record.is_evidence_backed %}
-          <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-50 px-3 py-2 rounded-pill">
-            <i class="bi bi-shield-check me-1"></i> Grounded in Official Documentation
+          <span class="badge bg-success bg-opacity-20 text-success border border-success border-opacity-30 px-2 py-1" style="font-size: 0.74rem;">
+            <i class="bi bi-check-circle me-1"></i> Grounded in Official Documentation
           </span>
         {% else %}
-          <span class="badge bg-warning bg-opacity-25 text-warning border border-warning border-opacity-50 px-3 py-2 rounded-pill">
-            <i class="bi bi-exclamation-triangle me-1"></i> Code-Only Hypothesis (No Evidence Found)
+          <span class="badge bg-warning bg-opacity-20 text-warning border border-warning border-opacity-30 px-2 py-1" style="font-size: 0.74rem;">
+            <i class="bi bi-exclamation-triangle me-1"></i> Code-Only Hypothesis
           </span>
         {% endif %}
       </div>
     </div>
 
-    <!-- Diagnosis Summary -->
-    <div class="p-3 rounded mb-4" style="background: rgba(0, 210, 255, 0.05); border: 1px solid rgba(0, 210, 255, 0.2);">
-      <h6 class="fw-bold text-info mb-1"><i class="bi bi-card-checklist me-2"></i>Diagnosis Summary</h6>
-      <p class="text-light mb-0 small leading-relaxed">{{ record.diagnosis_summary }}</p>
+    <!-- 1. Root Cause -->
+    <div class="p-3 rounded mb-3" style="background: rgba(245, 158, 11, 0.04); border: 1px solid rgba(245, 158, 11, 0.2);">
+      <div class="small fw-bold text-warning mb-1 text-uppercase" style="letter-spacing: 0.05em; font-size: 0.72rem;">
+        <i class="bi bi-exclamation-diamond me-1"></i> Root Cause & Reasoning
+      </div>
+      <p class="text-light mb-0 small leading-relaxed">
+        {% if record.root_causes %}
+          {{ record.root_causes|join:" " }}
+        {% else %}
+          {{ record.change_explanation }}
+        {% endif %}
+      </p>
     </div>
 
-    <!-- Submitted Problem & Error -->
-    <div class="row g-3 mb-4">
+    <!-- 2. Code Comparison: Submitted vs Corrected -->
+    <div class="row g-3 mb-3">
       <div class="col-md-6">
-        <div class="p-3 rounded bg-secondary bg-opacity-10 border border-secondary border-opacity-25 h-100">
-          <div class="small fw-bold text-muted text-uppercase mb-1">Reported Problem</div>
-          <p class="small text-light mb-0">{{ record.problem_description }}</p>
+        <div class="small text-danger fw-semibold mb-1" style="font-size: 0.78rem;">
+          <i class="bi bi-x-circle me-1"></i> Submitted Code:
         </div>
-      </div>
-      <div class="col-md-6">
-        <div class="p-3 rounded bg-secondary bg-opacity-10 border border-secondary border-opacity-25 h-100">
-          <div class="small fw-bold text-muted text-uppercase mb-1">Observed Error / Traceback</div>
-          <p class="small text-light font-mono mb-0">{{ record.error_message|default:"None specified" }}</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Root Causes & Code Observations -->
-    <div class="row g-4 mb-4">
-      <div class="col-lg-6">
-        <h5 class="fw-bold text-light mb-3"><i class="bi bi-diagram-2 text-warning me-2"></i>Likely Root Causes</h5>
-        {% for rc in record.root_causes %}
-          <div class="p-3 mb-2 rounded bg-secondary bg-opacity-10 border border-secondary border-opacity-25">
-            <div class="small text-light">{{ rc }}</div>
-          </div>
-        {% empty %}
-          <div class="text-muted small">No root causes recorded.</div>
-        {% endfor %}
-      </div>
-
-      <div class="col-lg-6">
-        <h5 class="fw-bold text-light mb-3"><i class="bi bi-binoculars text-info me-2"></i>Code Observations</h5>
-        <ul class="list-unstyled mb-0">
-          {% for obs in record.code_observations %}
-            <li class="mb-1 text-light"><i class="bi bi-arrow-right text-info me-2"></i>{{ obs }}</li>
-          {% empty %}
-            <li class="text-muted small">No specific observations recorded.</li>
-          {% endfor %}
-        </ul>
-      </div>
-    </div>
-
-    <!-- Code Comparison: Submitted vs Corrected -->
-    <div class="row g-3 mb-4">
-      <div class="col-md-6">
-        <div class="d-flex align-items-center justify-content-between mb-1">
-          <span class="small fw-semibold text-danger"><i class="bi bi-x-circle"></i> Submitted Code</span>
-        </div>
-        <pre class="m-0 rounded p-3" style="background: #0A0C11; border: 1px solid var(--border-card);"><code class="language-{{ record.language }}">{{ record.submitted_code }}</code></pre>
+        <pre class="m-0 rounded p-3" style="background: #090B10; border: 1px solid var(--border-card);"><code class="language-{{ record.language }}">{{ record.submitted_code }}</code></pre>
       </div>
 
       <div class="col-md-6">
         <div class="d-flex align-items-center justify-content-between mb-1">
-          <span class="small fw-semibold text-success"><i class="bi bi-check-circle"></i> Corrected Code</span>
+          <span class="small text-success fw-semibold" style="font-size: 0.78rem;">
+            <i class="bi bi-check-circle me-1"></i> Corrected Code:
+          </span>
           <button class="btn btn-sm text-secondary p-0" onclick="navigator.clipboard.writeText(`{{ record.corrected_code|escapejs }}`)">
             <i class="bi bi-clipboard"></i> Copy
           </button>
         </div>
-        <pre class="m-0 rounded p-3" style="background: #0A0C11; border: 1px solid var(--border-card);"><code class="language-{{ record.language }}">{{ record.corrected_code }}</code></pre>
+        <pre class="m-0 rounded p-3" style="background: #090B10; border: 1px solid var(--border-card);"><code class="language-{{ record.language }}">{{ record.corrected_code }}</code></pre>
       </div>
     </div>
 
-    <!-- Why This Fix Works -->
-    <div class="mb-4 p-3 rounded bg-secondary bg-opacity-10 border border-secondary border-opacity-25">
-      <h6 class="fw-bold text-light mb-2"><i class="bi bi-lightbulb text-warning me-2"></i>Why This Fix Works</h6>
-      <p class="text-secondary small mb-0 leading-relaxed">{{ record.change_explanation }}</p>
-    </div>
-
-    <!-- Suggested Regression Tests -->
-    {% if record.suggested_tests %}
-    <div class="mb-4">
-      <h6 class="fw-bold text-light mb-2"><i class="bi bi-check-all text-info me-2"></i>Suggested Regression Tests</h6>
-      {% for test in record.suggested_tests %}
-        <div class="font-mono small p-2 mb-1 bg-black bg-opacity-50 rounded border border-dark text-info">
-          <i class="bi bi-check2-circle text-success me-2"></i>{{ test }}
+    <!-- 3. Documentation Citations -->
+    {% if record.evidence %}
+    <div class="mb-3">
+      <div class="small fw-bold text-light mb-2">
+        <i class="bi bi-journal-check text-warning me-1"></i> Verified Documentation Evidence:
+      </div>
+      {% for p in record.evidence %}
+        <div class="citation-box">
+          <div class="d-flex justify-content-between align-items-center mb-1">
+            <span class="small fw-semibold text-warning">
+              <i class="bi bi-file-text me-1"></i> {{ p.filename|default:"Documentation" }} {% if p.page_number %}(Page {{ p.page_number }}){% endif %}
+            </span>
+            {% if p.relevance_score %}
+              <span class="badge bg-dark text-muted" style="font-size: 0.68rem;">{{ p.relevance_score }} match</span>
+            {% endif %}
+          </div>
+          <div class="citation-text">{{ p.content|default:p.citation_excerpt }}</div>
         </div>
       {% endfor %}
     </div>
     {% endif %}
 
-    <!-- Evidence Drawer -->
-    <div class="mb-4">
-      <h5 class="fw-bold text-light mb-3"><i class="bi bi-journal-bookmark-fill text-info me-2"></i>Retrieved Documentation Evidence</h5>
-      {% for p in record.evidence %}
-        <div class="evidence-card">
-          <div class="d-flex justify-content-between align-items-center mb-1">
-            <span class="fw-semibold text-info small">
-              <i class="bi bi-file-earmark-check me-1"></i> {{ p.filename|default:"Documentation" }}
-              {% if p.page_number %}<span class="badge bg-secondary ms-1">Page {{ p.page_number }}</span>{% endif %}
-            </span>
-            {% if p.relevance_score %}
-              <span class="badge bg-dark text-secondary border border-secondary">{{ p.relevance_score }} Match</span>
-            {% endif %}
-          </div>
-          <div class="evidence-quote">{{ p.content|default:p.citation_excerpt }}</div>
-        </div>
-      {% empty %}
-        <div class="alert alert-dark border-secondary small text-muted">
-          No document passages were associated with this analysis.
-        </div>
+    <!-- 4. Quick Verification Test -->
+    {% if record.suggested_tests %}
+    <div class="p-3 rounded bg-secondary bg-opacity-10 border border-secondary border-opacity-25">
+      <div class="small fw-bold text-secondary mb-1" style="font-size: 0.75rem;">
+        <i class="bi bi-check2-all text-info me-1"></i> Local Verification Test:
+      </div>
+      {% for test in record.suggested_tests %}
+        <div class="font-mono small text-info">{{ test }}</div>
       {% endfor %}
     </div>
-
-    <!-- Limitations -->
-    <div class="p-3 rounded border border-warning border-opacity-25" style="background: rgba(245, 158, 11, 0.04);">
-      <div class="d-flex align-items-center gap-2 mb-1">
-        <i class="bi bi-info-circle text-warning"></i>
-        <span class="fw-bold text-warning small">Assumptions & Limitations:</span>
-      </div>
-      <p class="small text-secondary mb-0">{{ record.limitations|default:"None recorded." }}</p>
-    </div>
+    {% endif %}
 
   </div>
 

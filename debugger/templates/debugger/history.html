@@ -4,70 +4,69 @@
 {% block title %}Analysis History — SutraTrace{% endblock %}
 
 {% block content %}
-<div class="container py-4">
+<div class="container py-4" style="max-width: 1100px;">
 
   <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
     <div>
-      <h2 class="h3 fw-bold m-0 text-light">
-        <i class="bi bi-clock-history text-info me-2"></i>Analysis History
+      <h2 class="h5 fw-bold m-0 text-light d-flex align-items-center gap-2">
+        <span class="badge bg-warning text-dark px-2 py-1 rounded-pill" style="font-size: 0.68rem; font-weight: 800;">HISTORY</span>
+        Past Analysis Records
       </h2>
-      <p class="text-secondary small mb-0">Reopen previous diagnoses and inspect verified citations.</p>
+      <p class="text-secondary small mb-0">Reopen previous diagnoses and verified citations.</p>
     </div>
     <a href="{% url 'debugger:debugger' %}" class="btn btn-sutra-primary btn-sm">
-      <i class="bi bi-plus-circle"></i> New Debug Session
+      <i class="bi bi-plus-circle"></i> New Session
     </a>
   </div>
 
-  <div class="sutra-card">
+  <div class="sutra-card p-3">
     
     <div class="table-responsive">
       <table class="table table-dark table-hover align-middle mb-0" style="background: transparent;">
         <thead>
-          <tr class="border-secondary border-opacity-25 text-muted small text-uppercase">
-            <th scope="col" style="width: 140px;">Timestamp</th>
-            <th scope="col" style="width: 100px;">Language</th>
-            <th scope="col" style="width: 110px;">Severity</th>
+          <tr class="border-secondary border-opacity-25 text-muted small text-uppercase" style="font-size: 0.72rem;">
+            <th scope="col" style="width: 130px;">Time</th>
+            <th scope="col" style="width: 90px;">Language</th>
+            <th scope="col" style="width: 100px;">Severity</th>
             <th scope="col">Diagnosis Summary</th>
-            <th scope="col" style="width: 140px;">Evidence Status</th>
-            <th scope="col" style="width: 120px;" class="text-end">Action</th>
+            <th scope="col" style="width: 130px;">Status</th>
+            <th scope="col" style="width: 100px;" class="text-end">Action</th>
           </tr>
         </thead>
         <tbody id="historyTableBody">
           {% for r in records %}
             <tr class="border-secondary border-opacity-10">
-              <td class="text-muted small font-mono">{{ r.created_at|date:"M d, H:i" }}</td>
-              <td><span class="badge bg-secondary bg-opacity-25 text-light">{{ r.language|upper }}</span></td>
+              <td class="text-muted small font-mono" style="font-size: 0.76rem;">{{ r.created_at|date:"M d, H:i" }}</td>
+              <td><span class="badge bg-dark text-secondary border border-secondary" style="font-size: 0.7rem;">{{ r.language|upper }}</span></td>
               <td><span class="badge badge-severity badge-{{ r.severity }}">{{ r.severity|upper }}</span></td>
               <td>
-                <div class="fw-semibold text-light small text-truncate" style="max-width: 420px;" title="{{ r.diagnosis_summary }}">
+                <div class="fw-semibold text-light small text-truncate" style="max-width: 440px;" title="{{ r.diagnosis_summary }}">
                   {{ r.diagnosis_summary }}
                 </div>
-                <div class="text-secondary" style="font-size: 0.75rem;">Problem: {{ r.problem_description|truncatechars:70 }}</div>
               </td>
               <td>
                 {% if r.is_evidence_backed %}
-                  <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-25" style="font-size: 0.72rem;">
+                  <span class="badge bg-success bg-opacity-20 text-success border border-success border-opacity-30" style="font-size: 0.7rem;">
                     <i class="bi bi-check-circle me-1"></i> Documented
                   </span>
                 {% else %}
-                  <span class="badge bg-warning bg-opacity-25 text-warning border border-warning border-opacity-25" style="font-size: 0.72rem;">
+                  <span class="badge bg-warning bg-opacity-20 text-warning border border-warning border-opacity-30" style="font-size: 0.7rem;">
                     <i class="bi bi-question-circle me-1"></i> Hypothesis
                   </span>
                 {% endif %}
               </td>
               <td class="text-end">
-                <a href="{% url 'debugger:results' r.id %}" class="btn btn-sm btn-outline-info py-1 px-2" style="font-size: 0.78rem;">
-                  Inspect <i class="bi bi-arrow-right"></i>
+                <a href="{% url 'debugger:results' r.id %}" class="btn btn-sm btn-outline-light py-1 px-2" style="font-size: 0.74rem;">
+                  Inspect →
                 </a>
               </td>
             </tr>
           {% empty %}
             <tr>
               <td colspan="6" class="text-center py-5 text-muted">
-                <i class="bi bi-journal-code fs-1 d-block mb-2 opacity-50"></i>
-                <p class="mb-1">No analysis history recorded yet.</p>
-                <p class="small text-secondary mb-3">Run an evidence-grounded debug session to populate your history.</p>
-                <a href="{% url 'debugger:debugger' %}" class="btn btn-sutra-secondary btn-sm">Launch Workspace</a>
+                <i class="bi bi-journal-code fs-2 d-block mb-2 opacity-30 text-warning"></i>
+                <p class="small mb-1">No analysis history recorded for this account.</p>
+                <a href="{% url 'debugger:debugger' %}" class="btn btn-sutra-secondary btn-sm mt-2">Open Workspace</a>
               </td>
             </tr>
           {% endfor %}
