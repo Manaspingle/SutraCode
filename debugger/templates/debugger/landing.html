@@ -1,0 +1,174 @@
+{% extends 'debugger/base.html' %}
+{% load static %}
+
+{% block title %}SutraTrace — Trace the cause. Verify the fix.{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+  <!-- Hero Section -->
+  <div class="row align-items-center justify-content-center text-center py-5">
+    <div class="col-lg-10 col-xl-9">
+      
+      <!-- Announcement Pill Badge -->
+      <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill mb-4 border border-secondary border-opacity-25" style="background: rgba(255,255,255,0.03);">
+        <span class="badge bg-info text-dark rounded-pill fw-bold" style="font-size: 0.7rem;">RAG POWERED</span>
+        <span class="small text-secondary">Evidence-Grounded AI Code Debugging Engine</span>
+        <i class="bi bi-arrow-right text-info small"></i>
+      </div>
+
+      <!-- Main Heading with High-Contrast Typography -->
+      <h1 class="display-3 fw-bold mb-3 tracking-tight" style="letter-spacing: -0.04em; line-height: 1.1;">
+        Trace the cause.<br>
+        <span style="background: linear-gradient(135deg, #FFFFFF 0%, #00D2FF 60%, #3A7BD5 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+          Verify the fix.
+        </span>
+      </h1>
+
+      <!-- Subtitle -->
+      <p class="lead text-secondary mb-5 mx-auto" style="max-width: 680px; font-size: 1.15rem; line-height: 1.6;">
+        Stop guessing with generic chatbots. <strong>SutraTrace</strong> retrieves exact passages from your uploaded technical documentation and feeds verified evidence to Google Gemini to explain root causes, highlight code diffs, and generate regression tests.
+      </p>
+
+      <!-- Action CTAs -->
+      <div class="d-flex flex-wrap justify-content-center gap-3 mb-5">
+        <a href="{% url 'debugger:debugger' %}" class="btn btn-sutra-primary py-3 px-4 fs-6">
+          <i class="bi bi-lightning-charge-fill"></i> Start Debugging
+        </a>
+        <a href="{% url 'debugger:how_it_works' %}" class="btn btn-sutra-secondary py-3 px-4 fs-6">
+          <i class="bi bi-play-circle"></i> How It Works
+        </a>
+      </div>
+
+      <!-- Compact Workflow Illustration (Code -> Retrieve -> Diagnose -> Verify) -->
+      <div class="sutra-card p-4 mx-auto mb-5" style="max-width: 850px; background: rgba(19, 23, 34, 0.7); backdrop-filter: blur(12px);">
+        <div class="text-uppercase small fw-bold text-muted mb-3" style="letter-spacing: 0.1em;">
+          4-Stage Evidence Pipeline
+        </div>
+        <div class="row g-3 text-start">
+          <div class="col-md-3">
+            <div class="p-3 rounded h-100 border border-secondary border-opacity-25" style="background: rgba(0,0,0,0.3);">
+              <div class="d-flex align-items-center gap-2 mb-2">
+                <span class="badge bg-secondary text-light">1</span>
+                <span class="fw-bold text-light small">Code & Bug</span>
+              </div>
+              <p class="small text-secondary mb-0">Submit code snippet, error message, and expected behavior.</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="p-3 rounded h-100 border border-info border-opacity-30" style="background: rgba(0, 210, 255, 0.05);">
+              <div class="d-flex align-items-center gap-2 mb-2">
+                <span class="badge bg-info text-dark">2</span>
+                <span class="fw-bold text-info small">ChromaDB RAG</span>
+              </div>
+              <p class="small text-secondary mb-0">Embed query with MiniLM and retrieve top documentation chunks.</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="p-3 rounded h-100 border border-warning border-opacity-30" style="background: rgba(245, 158, 11, 0.05);">
+              <div class="d-flex align-items-center gap-2 mb-2">
+                <span class="badge bg-warning text-dark">3</span>
+                <span class="fw-bold text-warning small">Gemini 3.1</span>
+              </div>
+              <p class="small text-secondary mb-0">Synthesizes evidence to isolate root causes and produce diff.</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="p-3 rounded h-100 border border-success border-opacity-30" style="background: rgba(16, 185, 129, 0.05);">
+              <div class="d-flex align-items-center gap-2 mb-2">
+                <span class="badge bg-success text-dark">4</span>
+                <span class="fw-bold text-success small">Verify Fix</span>
+              </div>
+              <p class="small text-secondary mb-0">Inspect citations, verify regression tests, and copy correction.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Feature Highlights (3 Key Features) -->
+  <div class="row g-4 my-4">
+    <div class="col-md-4">
+      <div class="sutra-card h-100">
+        <div class="d-inline-flex p-3 rounded-circle mb-3 border border-info border-opacity-25" style="background: rgba(0, 210, 255, 0.1);">
+          <i class="bi bi-file-earmark-diff fs-3 text-info"></i>
+        </div>
+        <h4 class="fw-bold text-light mb-2">Context-Aware Retrieval</h4>
+        <p class="text-secondary small mb-3">
+          Ingest technical PDFs and TXT documentation using PyMuPDF. Our vector store extracts and chunks specifications into 700–1000 character windows to pinpoint the exact rules governing your code.
+        </p>
+        <span class="text-info small fw-semibold">Local ChromaDB & MiniLM <i class="bi bi-arrow-right"></i></span>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="sutra-card h-100">
+        <div class="d-inline-flex p-3 rounded-circle mb-3 border border-warning border-opacity-25" style="background: rgba(245, 158, 11, 0.1);">
+          <i class="bi bi-cpu fs-3 text-warning"></i>
+        </div>
+        <h4 class="fw-bold text-light mb-2">Explainable Fixes & Diffs</h4>
+        <p class="text-secondary small mb-3">
+          Never accept an ungrounded rewrite. SutraTrace pinpoints the exact faulty lines, generates an interactive line-by-line diff, and explains step-by-step why the proposed correction satisfies API contracts.
+        </p>
+        <span class="text-warning small fw-semibold">Minimal Corrections <i class="bi bi-arrow-right"></i></span>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="sutra-card h-100">
+        <div class="d-inline-flex p-3 rounded-circle mb-3 border border-success border-opacity-25" style="background: rgba(16, 185, 129, 0.1);">
+          <i class="bi bi-journal-check fs-3 text-success"></i>
+        </div>
+        <h4 class="fw-bold text-light mb-2">Source-Backed Answers</h4>
+        <p class="text-secondary small mb-3">
+          Every diagnosis is cross-referenced with verbatim source citations, filename, and page numbers. When evidence is lacking, SutraTrace honestly labels findings as tentative hypotheses.
+        </p>
+        <span class="text-success small fw-semibold">Zero Hallucinations <i class="bi bi-arrow-right"></i></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Code & Diff Preview Card (Linear & Cursor inspired) -->
+  <div class="sutra-card p-4 my-5" style="background: #090B10; border-color: rgba(255, 255, 255, 0.15);">
+    <div class="d-flex align-items-center justify-content-between mb-3 border-bottom border-secondary border-opacity-25 pb-2">
+      <div class="d-flex align-items-center gap-2">
+        <span class="badge bg-danger bg-opacity-25 text-danger border border-danger border-opacity-50">DEFECT DETECTED</span>
+        <span class="text-light fw-bold small">Python Requests Missing Timeout Bug</span>
+      </div>
+      <div class="text-muted small">
+        <span class="text-info"><i class="bi bi-file-earmark-check"></i> Cited from Official_Requests_Documentation.txt (Page 1)</span>
+      </div>
+    </div>
+    
+    <div class="row g-3">
+      <div class="col-md-6">
+        <div class="small fw-semibold text-danger mb-1"><i class="bi bi-x-circle"></i> Original Buggy Code</div>
+        <pre class="m-0 rounded p-3" style="background: #0E1117;"><code class="language-python">def fetch_user_data(user_id):
+    url = f"https://api.example.com/users/{user_id}"
+    # Hangs indefinitely on dropped packets!
+    response = requests.get(url)
+    return response.json()</code></pre>
+      </div>
+      <div class="col-md-6">
+        <div class="small fw-semibold text-success mb-1"><i class="bi bi-check-circle"></i> Evidence-Grounded Correction</div>
+        <pre class="m-0 rounded p-3" style="background: #0E1117;"><code class="language-python">def fetch_user_data(user_id):
+    url = f"https://api.example.com/users/{user_id}"
+    # Specified connection & read timeouts
+    response = requests.get(url, timeout=(3.05, 10))
+    response.raise_for_status()
+    return response.json()</code></pre>
+      </div>
+    </div>
+
+    <div class="mt-3 p-3 rounded" style="background: rgba(0, 210, 255, 0.04); border-left: 3px solid #00D2FF;">
+      <div class="small fw-bold text-info mb-1"><i class="bi bi-quote"></i> Grounded Citation:</div>
+      <div class="small text-secondary font-mono">
+        "Nearly all production requests should specify a timeout parameter to avoid hanging threads indefinitely... If no timeout is specified, Requests will wait forever for a socket response."
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

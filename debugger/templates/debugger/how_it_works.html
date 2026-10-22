@@ -1,0 +1,157 @@
+{% extends 'debugger/base.html' %}
+{% load static %}
+
+{% block title %}How It Works — SutraTrace Architecture{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+  <div class="text-center mb-5">
+    <span class="badge bg-info text-dark rounded-pill fw-bold mb-2">SYSTEM ARCHITECTURE</span>
+    <h1 class="display-5 fw-bold text-light mb-3">How SutraTrace Eliminates AI Hallucinations</h1>
+    <p class="lead text-secondary mx-auto" style="max-width: 650px; font-size: 1.1rem;">
+      Traditional LLMs guess based on generic training weights. SutraTrace anchors every claim in verbatim passages retrieved from your uploaded technical manuals.
+    </p>
+  </div>
+
+  <!-- Deep Architecture Breakdown -->
+  <div class="row g-4 mb-5">
+    
+    <div class="col-md-6 col-lg-4">
+      <div class="sutra-card h-100">
+        <div class="d-flex align-items-center gap-2 mb-3">
+          <span class="badge bg-info text-dark fw-bold">STEP 1</span>
+          <h5 class="fw-bold text-light m-0">Document Extraction</h5>
+        </div>
+        <p class="small text-secondary mb-3">
+          Uploaded PDF and TXT programming guides are parsed using <strong>PyMuPDF</strong>. The engine preserves structural metadata including page numbers and source titles, discarding empty pages.
+        </p>
+        <div class="small font-mono text-muted bg-black bg-opacity-40 p-2 rounded">
+          PyMuPDF (fitz) • Page Preservation
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4">
+      <div class="sutra-card h-100">
+        <div class="d-flex align-items-center gap-2 mb-3">
+          <span class="badge bg-info text-dark fw-bold">STEP 2</span>
+          <h5 class="fw-bold text-light m-0">Sliding Window Chunking</h5>
+        </div>
+        <p class="small text-secondary mb-3">
+          Continuous documentation text is split into semantic chunks of <strong>700–1,000 characters</strong> with a <strong>150-character overlap</strong>, breaking cleanly on sentence and paragraph boundaries.
+        </p>
+        <div class="small font-mono text-muted bg-black bg-opacity-40 p-2 rounded">
+          Chunk Size: 850 chars • Overlap: 150
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4">
+      <div class="sutra-card h-100">
+        <div class="d-flex align-items-center gap-2 mb-3">
+          <span class="badge bg-info text-dark fw-bold">STEP 3</span>
+          <h5 class="fw-bold text-light m-0">Vector Embedding Store</h5>
+        </div>
+        <p class="small text-secondary mb-3">
+          Passages are vectorized into 384-dimensional dense vectors using <strong>all-MiniLM-L6-v2</strong> and persisted in a local <strong>ChromaDB</strong> HNSW index tagged with the user's isolated namespace.
+        </p>
+        <div class="small font-mono text-muted bg-black bg-opacity-40 p-2 rounded">
+          ChromaDB • Cosine Space • MiniLM
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4">
+      <div class="sutra-card h-100">
+        <div class="d-flex align-items-center gap-2 mb-3">
+          <span class="badge bg-warning text-dark fw-bold">STEP 4</span>
+          <h5 class="fw-bold text-light m-0">Multi-Modal Query Expansion</h5>
+        </div>
+        <p class="small text-secondary mb-3">
+          When you submit code, SutraTrace synthesizes the programming language, reported error message, expected behavior, and code signature into a high-signal search query.
+        </p>
+        <div class="small font-mono text-muted bg-black bg-opacity-40 p-2 rounded">
+          Query: [Lang] + [Problem] + [Trace]
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4">
+      <div class="sutra-card h-100">
+        <div class="d-flex align-items-center gap-2 mb-3">
+          <span class="badge bg-warning text-dark fw-bold">STEP 5</span>
+          <h5 class="fw-bold text-light m-0">Gemini Grounded Reasoning</h5>
+        </div>
+        <p class="small text-secondary mb-3">
+          Top retrieved passages pass through a relevance threshold filter. Gemini 3.1 is instructed to treat user code and retrieved passages as untrusted content, preventing prompt injection attacks.
+        </p>
+        <div class="small font-mono text-muted bg-black bg-opacity-40 p-2 rounded">
+          Google Gemini 3.1 • Temp: 0.1
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4">
+      <div class="sutra-card h-100">
+        <div class="d-flex align-items-center gap-2 mb-3">
+          <span class="badge bg-success text-dark fw-bold">STEP 6</span>
+          <h5 class="fw-bold text-light m-0">Verifiable Output & Diffs</h5>
+        </div>
+        <p class="small text-secondary mb-3">
+          Gemini produces structured JSON separating observations, root causes, minimal line diffs, and exact citations. Missing evidence is explicitly acknowledged. Untrusted code is never executed.
+        </p>
+        <div class="small font-mono text-muted bg-black bg-opacity-40 p-2 rounded">
+          Structured JSON • Zero Execution Risk
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Comparison Table -->
+  <div class="sutra-card p-4 my-4">
+    <h4 class="fw-bold text-light mb-4 text-center">Architectural Comparison</h4>
+    <div class="table-responsive">
+      <table class="table table-dark align-middle mb-0" style="background: transparent;">
+        <thead>
+          <tr class="border-secondary border-opacity-25 text-muted small text-uppercase">
+            <th scope="col">Capability</th>
+            <th scope="col" style="width: 45%;">Generic Chatbot (Ungrounded)</th>
+            <th scope="col" style="width: 45%;" class="text-info">SutraTrace RAG Engine</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-secondary border-opacity-10">
+            <td class="fw-semibold text-light small">Knowledge Base</td>
+            <td class="text-secondary small">Static training weights from months or years ago.</td>
+            <td class="text-info small fw-medium">Real-time indexed technical documents uploaded by you.</td>
+          </tr>
+          <tr class="border-secondary border-opacity-10">
+            <td class="fw-semibold text-light small">Citation Accuracy</td>
+            <td class="text-secondary small">Often fabricates fictitious URLs, line numbers, and book chapters.</td>
+            <td class="text-info small fw-medium">Verbatim source excerpts with actual filenames and page numbers.</td>
+          </tr>
+          <tr class="border-secondary border-opacity-10">
+            <td class="fw-semibold text-light small">Missing Evidence</td>
+            <td class="text-secondary small">Hallucinates a confident answer even when clueless.</td>
+            <td class="text-info small fw-medium">Explicitly warns that evidence is missing and labels fix as hypothesis.</td>
+          </tr>
+          <tr class="border-secondary border-opacity-10">
+            <td class="fw-semibold text-light small">Code Safety</td>
+            <td class="text-secondary small">May run code in unmonitored containers with privilege leaks.</td>
+            <td class="text-info small fw-medium">Strict zero-execution policy. Never executes untrusted user code.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="text-center mt-5">
+    <a href="{% url 'debugger:debugger' %}" class="btn btn-sutra-primary py-3 px-5 fs-6">
+      <i class="bi bi-play-circle-fill"></i> Test in Workspace Now
+    </a>
+  </div>
+
+</div>
+{% endblock %}

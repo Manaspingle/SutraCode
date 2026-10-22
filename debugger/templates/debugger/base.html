@@ -1,0 +1,169 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}SutraTrace — Evidence-Grounded AI Code Debugging Assistant{% endblock %}</title>
+  <meta name="description" content="Trace the cause. Verify the fix. Ground AI code debugging in real programming documentation using RAG and Gemini.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+  <!-- Highlight.js for Syntax Highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+
+  <!-- Custom Design Tokens & Theme -->
+  <link rel="stylesheet" href="{% static 'debugger/css/main.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-sutra">
+    <div class="container-fluid px-lg-4">
+      <a class="brand-badge" href="{% url 'debugger:landing' %}">
+        <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="16" cy="16" r="14" stroke="#00D2FF" stroke-width="2.5" stroke-dasharray="6 3"/>
+          <path d="M10 16L14 20L22 12" stroke="#00D2FF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="22" cy="12" r="3" fill="#FFFFFF"/>
+        </svg>
+        <span>SutraTrace</span>
+      </a>
+
+      <button class="navbar-toggler border-0 text-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+        <i class="bi bi-list fs-3"></i>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4 gap-1">
+          <li class="nav-item">
+            <a class="nav-link-custom {% if request.resolver_match.url_name == 'landing' %}active{% endif %}" href="{% url 'debugger:landing' %}">
+              <i class="bi bi-house"></i> Home
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link-custom {% if request.resolver_match.url_name == 'debugger' %}active{% endif %}" href="{% url 'debugger:debugger' %}">
+              <i class="bi bi-code-slash"></i> Workspace
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link-custom {% if request.resolver_match.url_name == 'history' %}active{% endif %}" href="{% url 'debugger:history' %}">
+              <i class="bi bi-clock-history"></i> History
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link-custom {% if request.resolver_match.url_name == 'how_it_works' %}active{% endif %}" href="{% url 'debugger:how_it_works' %}">
+              <i class="bi bi-diagram-3"></i> How It Works
+            </a>
+          </li>
+        </ul>
+
+        <!-- Right Side: Auth Status & Actions -->
+        <div class="d-flex align-items-center gap-2">
+          <div id="authStatusChip" class="d-none"></div>
+          <button id="navbarAuthBtn" class="btn btn-sutra-secondary btn-sm" onclick="openAuthModal()">
+            <i class="bi bi-person"></i> Sign In
+          </button>
+          <a href="{% url 'debugger:debugger' %}" class="btn btn-sutra-primary btn-sm d-none d-sm-inline-flex">
+            <i class="bi bi-lightning-charge-fill"></i> Launch Debugger
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content Block -->
+  <main class="flex-grow-1">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Global Toast Notifications -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer" style="z-index: 1080;"></div>
+
+  <!-- Firebase Auth Modal -->
+  <div class="modal fade" id="authModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content modal-content-custom">
+        <div class="modal-header border-bottom border-secondary border-opacity-25 pb-3">
+          <h5 class="modal-title fw-bold text-light">
+            <i class="bi bi-shield-lock text-info me-2"></i>Developer Authentication
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4">
+          <p class="text-secondary small mb-4">
+            Sign in with Firebase to isolate your vector database collections and synchronize analysis history to Cloud Firestore.
+          </p>
+
+          <button class="btn btn-outline-light w-100 py-2 d-flex align-items-center justify-content-center gap-2 mb-3 rounded-pill fw-semibold" onclick="handleGoogleSignIn()">
+            <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+            Sign in with Google
+          </button>
+
+          <div class="position-relative text-center my-3">
+            <hr class="border-secondary opacity-25">
+            <span class="position-absolute top-50 start-50 translate-middle bg-dark px-2 text-muted small">or email</span>
+          </div>
+
+          <form onsubmit="handleEmailSignIn(event)">
+            <div class="mb-3">
+              <label class="form-label small text-secondary">Email Address</label>
+              <input type="email" id="authEmail" class="form-control" placeholder="developer@example.com" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small text-secondary">Password</label>
+              <input type="password" id="authPassword" class="form-control" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="btn btn-sutra-primary w-100 py-2">
+              Continue with Email
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer-sutra mt-5">
+    <div class="container text-center">
+      <div class="d-flex flex-wrap justify-content-center gap-3 mb-3">
+        <span class="badge bg-dark text-secondary border border-secondary">Python 3.12</span>
+        <span class="badge bg-dark text-secondary border border-secondary">Django 6.1</span>
+        <span class="badge bg-dark text-info border border-info">Google Gemini 3.1</span>
+        <span class="badge bg-dark text-secondary border border-secondary">ChromaDB Vector Store</span>
+        <span class="badge bg-dark text-secondary border border-secondary">all-MiniLM-L6-v2 Embeddings</span>
+        <span class="badge bg-dark text-secondary border border-secondary">PyMuPDF</span>
+        <span class="badge bg-dark text-warning border border-warning">Firebase Auth & Firestore</span>
+      </div>
+      <p class="mb-1 text-light fw-medium">SutraTrace — Trace the cause. Verify the fix.</p>
+      <p class="small text-muted mb-0">
+        Prototype Notice: The application never executes untrusted code. Suggested fixes require verification in safe test environments.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+
+  <!-- Firebase Compat SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+  <!-- Injected Firebase Config -->
+  <script>
+    window.FIREBASE_CONFIG = {{ FIREBASE_CONFIG_JSON|safe }};
+  </script>
+  <script src="{% static 'debugger/js/firebase-init.js' %}"></script>
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>

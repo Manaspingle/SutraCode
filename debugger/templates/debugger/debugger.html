@@ -1,0 +1,298 @@
+{% extends 'debugger/base.html' %}
+{% load static %}
+
+{% block title %}Debugger Workspace — SutraTrace{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-lg-4 py-4">
+
+  <!-- Header & Status Bar -->
+  <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+    <div>
+      <h2 class="h3 fw-bold mb-1 text-light">
+        <i class="bi bi-terminal-split text-info me-2"></i>Evidence-Grounded Workspace
+      </h2>
+      <p class="text-secondary small mb-0">
+        Trace errors using vector retrieval from your uploaded documentation.
+      </p>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <span class="badge bg-secondary bg-opacity-25 text-light border border-secondary border-opacity-50 px-3 py-2 rounded-pill">
+        <i class="bi bi-database me-1"></i> Knowledge Base: <span id="docCountBadge" class="text-info fw-bold">Loading...</span>
+      </span>
+      <button class="btn btn-sutra-secondary btn-sm" onclick="clearCodeEditor()">
+        <i class="bi bi-arrow-counterclockwise"></i> Reset Workspace
+      </button>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    
+    <!-- LEFT PANEL: Documentation Vault (RAG Ingestion) -->
+    <div class="col-lg-4">
+      <div class="sutra-card h-100">
+        
+        <div class="panel-header">
+          <div class="panel-title">
+            <i class="bi bi-folder2-open text-info"></i>
+            <span>Documentation Vault</span>
+          </div>
+          <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25" style="font-size: 0.72rem;">RAG SOURCE</span>
+        </div>
+
+        <p class="small text-secondary mb-3">
+          Upload PDF or TXT programming manuals. Chunks (700-1,000 chars) are vectorized into ChromaDB for semantic lookup.
+        </p>
+
+        <!-- Dropzone Area -->
+        <div class="dropzone-area mb-3" id="dropzone">
+          <i class="bi bi-cloud-arrow-up text-info fs-2 d-block mb-2"></i>
+          <span class="small fw-semibold text-light d-block mb-1">Click to browse or drop file here</span>
+          <span class="small text-muted" style="font-size: 0.75rem;">Supported: PDF, TXT (Max 15MB)</span>
+          <input type="file" id="documentFileInput" class="d-none" accept=".pdf,.txt">
+        </div>
+
+        <!-- Ingestion Progress / Status -->
+        <div id="uploadProgressStatus" class="alert alert-dark border-info border-opacity-50 small p-2 mb-3 d-none"></div>
+
+        <!-- One-Click Sample Documentation Presets -->
+        <div class="mb-4">
+          <div class="small fw-semibold text-muted text-uppercase mb-2" style="font-size: 0.72rem; letter-spacing: 0.05em;">
+            Quick Ingest Official Samples:
+          </div>
+          <div class="d-flex flex-wrap gap-2">
+            <button class="btn btn-sm btn-sutra-secondary py-1 px-2" style="font-size: 0.75rem;" onclick="loadSampleDoc('requests')">
+              <i class="bi bi-plus-circle text-info"></i> + Requests Docs (PDF/TXT)
+            </button>
+            <button class="btn btn-sm btn-sutra-secondary py-1 px-2" style="font-size: 0.75rem;" onclick="loadSampleDoc('fastapi')">
+              <i class="bi bi-plus-circle text-info"></i> + Python Idioms
+            </button>
+          </div>
+        </div>
+
+        <!-- Document List -->
+        <div>
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <span class="small fw-bold text-light">Indexed Documents</span>
+            <button class="btn btn-link btn-sm text-secondary p-0 text-decoration-none" onclick="loadDocumentsList()">
+              <i class="bi bi-arrow-repeat"></i> Refresh
+            </button>
+          </div>
+          <div id="documentsList" style="max-height: 380px; overflow-y: auto;">
+            <!-- Document items rendered via JS -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL: Code Editor & Analysis Form -->
+    <div class="col-lg-8">
+      <div class="sutra-card">
+        
+        <!-- Preset Selector Header -->
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3 pb-3 border-bottom border-secondary border-opacity-25">
+          <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-code-square text-info fs-5"></i>
+            <span class="fw-bold text-light">Bug Definition & Code</span>
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <span class="small text-muted">Load Bug Presets:</span>
+            <button class="btn btn-sm btn-outline-secondary py-1 px-2" style="font-size: 0.78rem;" onclick="loadSampleBug('requests_timeout')">
+              Requests Timeout
+            </button>
+            <button class="btn btn-sm btn-outline-secondary py-1 px-2" style="font-size: 0.78rem;" onclick="loadSampleBug('mutable_defaults')">
+              Mutable Defaults
+            </button>
+            <button class="btn btn-sm btn-outline-secondary py-1 px-2" style="font-size: 0.78rem;" onclick="loadSampleBug('js_async_foreach')">
+              JS Async Loop
+            </button>
+          </div>
+        </div>
+
+        <form id="debugAnalysisForm">
+          
+          <!-- Language Selector -->
+          <div class="row g-3 mb-3">
+            <div class="col-md-4">
+              <label class="form-label small text-secondary fw-semibold">Target Programming Language</label>
+              {{ form.language }}
+            </div>
+            <div class="col-md-8">
+              <label class="form-label small text-secondary fw-semibold">Specific Question or Focus (Optional)</label>
+              {{ form.user_question }}
+            </div>
+          </div>
+
+          <!-- Code Input Area -->
+          <div class="mb-3">
+            <div class="d-flex align-items-center justify-content-between mb-1">
+              <label class="form-label small text-secondary fw-semibold m-0">Submitted Code (Read-only execution sandboxed)</label>
+              <span class="small text-muted" style="font-size: 0.75rem;">Max 50,000 characters</span>
+            </div>
+            {{ form.submitted_code }}
+          </div>
+
+          <!-- Problem & Error Inputs -->
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label small text-secondary fw-semibold">Reported Problem / Observed Behavior *</label>
+              {{ form.problem_description }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small text-secondary fw-semibold">Error Message / Stack Trace (Optional)</label>
+              {{ form.error_message }}
+            </div>
+          </div>
+
+          <!-- Expected Behavior -->
+          <div class="mb-4">
+            <label class="form-label small text-secondary fw-semibold">Expected Behavior / Correct Output (Optional)</label>
+            {{ form.expected_behavior }}
+          </div>
+
+          <!-- Submit Action -->
+          <div class="d-flex align-items-center justify-content-between pt-2 border-top border-secondary border-opacity-25">
+            <span class="small text-muted">
+              <i class="bi bi-shield-lock me-1"></i> Code is never executed. RAG retrieves evidence before synthesis.
+            </span>
+            <button type="submit" id="analyzeBtn" class="btn btn-sutra-primary py-2 px-4">
+              <i class="bi bi-cpu fs-5"></i> Analyze with Evidence
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RESULTS SECTION (Reactive In-Page View) -->
+  <div id="resultsContainer" class="sutra-card mt-4 d-none">
+    
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 pb-3 mb-4 border-bottom border-secondary border-opacity-25">
+      <div class="d-flex align-items-center gap-3">
+        <h3 class="h4 fw-bold m-0 text-light">Diagnosis & Verified Correction</h3>
+        <span id="resSeverity" class="badge badge-severity badge-medium">MEDIUM</span>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <span id="resEvidenceStatus" class="badge"></span>
+        <button class="btn btn-sutra-secondary btn-sm" onclick="copyCorrectedCode()">
+          <i class="bi bi-clipboard"></i> Copy Fix
+        </button>
+      </div>
+    </div>
+
+    <!-- Summary Box -->
+    <div class="p-3 rounded mb-4" style="background: rgba(0, 210, 255, 0.05); border: 1px solid rgba(0, 210, 255, 0.2);">
+      <h6 class="fw-bold text-info mb-1"><i class="bi bi-card-checklist me-2"></i>Diagnosis Summary</h6>
+      <p id="resSummary" class="text-light mb-0 small leading-relaxed"></p>
+    </div>
+
+    <div class="row g-4 mb-4">
+      <!-- Root Causes -->
+      <div class="col-lg-6">
+        <h5 class="fw-bold text-light mb-3"><i class="bi bi-diagram-2 text-warning me-2"></i>Likely Root Causes & Reasoning</h5>
+        <div id="resRootCauses"></div>
+      </div>
+
+      <!-- Code Observations -->
+      <div class="col-lg-6">
+        <h5 class="fw-bold text-light mb-3"><i class="bi bi-binoculars text-info me-2"></i>Code Observations</h5>
+        <ul id="resObservations" class="list-unstyled mb-0"></ul>
+      </div>
+    </div>
+
+    <!-- Corrected Code & Unified Diff -->
+    <div class="mb-4">
+      <div class="d-flex align-items-center justify-content-between mb-2">
+        <h5 class="fw-bold text-light m-0"><i class="bi bi-code-slash text-success me-2"></i>Suggested Minimal Correction & Diff</h5>
+        <span class="badge bg-dark text-secondary border border-secondary" style="font-size: 0.75rem;">+ Added / - Removed</span>
+      </div>
+      
+      <div class="diff-container p-2 mb-3" id="resDiffContainer">
+        <!-- Rendered Diff lines -->
+      </div>
+
+      <div class="position-relative">
+        <pre class="m-0 rounded p-3" style="background: #0A0C11; border: 1px solid var(--border-card);"><code id="resCorrectedCode" class="language-python"></code></pre>
+      </div>
+    </div>
+
+    <!-- Why This Fix Works -->
+    <div class="mb-4 p-3 rounded bg-secondary bg-opacity-10 border border-secondary border-opacity-25">
+      <h6 class="fw-bold text-light mb-2"><i class="bi bi-lightbulb text-warning me-2"></i>Why This Fix Works</h6>
+      <p id="resExplanation" class="text-secondary small mb-0 leading-relaxed"></p>
+    </div>
+
+    <!-- Suggested Regression Tests -->
+    <div class="mb-4">
+      <h6 class="fw-bold text-light mb-2"><i class="bi bi-check-all text-info me-2"></i>Suggested Regression Tests (Run locally)</h6>
+      <div id="resTests"></div>
+    </div>
+
+    <!-- Evidence Drawer (Passages) -->
+    <div class="mb-4">
+      <h5 class="fw-bold text-light mb-3"><i class="bi bi-journal-bookmark-fill text-info me-2"></i>Retrieved Documentation Evidence</h5>
+      <div id="resEvidenceList"></div>
+    </div>
+
+    <!-- Limitations & Confidence -->
+    <div class="p-3 rounded border border-warning border-opacity-25" style="background: rgba(245, 158, 11, 0.04);">
+      <div class="d-flex align-items-center gap-2 mb-1">
+        <i class="bi bi-info-circle text-warning"></i>
+        <span class="fw-bold text-warning small">Assumptions & Limitations:</span>
+      </div>
+      <p id="resLimitations" class="small text-secondary mb-0"></p>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- 4-Stage Analysis Progress Modal -->
+<div class="modal fade" id="analysisProgressModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content modal-content-custom">
+      <div class="modal-header border-bottom border-secondary border-opacity-25 pb-3">
+        <h5 class="modal-title fw-bold text-light">
+          <span class="spinner-border spinner-border-sm text-info me-2"></span>Synthesizing Evidence
+        </h5>
+      </div>
+      <div class="modal-body p-4">
+        <p class="text-secondary small mb-3">
+          Executing multi-stage RAG retrieval and strict grounded reasoning via Google Gemini:
+        </p>
+
+        <div class="stage-list">
+          <div class="stage-item" id="stage-1">
+            <i class="bi bi-circle text-muted me-2"></i>
+            <span>Stage 1: Validating Code & Ingestion State</span>
+          </div>
+          <div class="stage-item" id="stage-2">
+            <i class="bi bi-circle text-muted me-2"></i>
+            <span>Stage 2: ChromaDB Vector Retrieval (all-MiniLM-L6-v2)</span>
+          </div>
+          <div class="stage-item" id="stage-3">
+            <i class="bi bi-circle text-muted me-2"></i>
+            <span>Stage 3: Gemini 3.1 Reasoning & Root Cause Isolation</span>
+          </div>
+          <div class="stage-item" id="stage-4">
+            <i class="bi bi-circle text-muted me-2"></i>
+            <span>Stage 4: Assembling Diff & Source Citations</span>
+          </div>
+        </div>
+
+        <div class="alert alert-dark border-secondary small text-muted mt-3 mb-0" style="font-size: 0.75rem;">
+          <i class="bi bi-lock me-1"></i> Untrusted code execution is strictly disabled.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'debugger/js/debugger.js' %}"></script>
+{% endblock %}
