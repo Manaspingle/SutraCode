@@ -1,0 +1,37 @@
+# Official Documentation Reference: Python Core & Common Pitfalls
+Source: Python Standard Documentation & Best Practices
+
+1. Default Parameter Values and Mutable Objects
+In Python, default parameter values are evaluated once when the function definition is executed, NOT each time the function is called.
+If a mutable object such as a list `[]`, dictionary `{}`, or set is used as a default parameter, any in-place mutation of that object will persist across subsequent function invocations.
+
+Bad Practice:
+    def append_to(element, target_list=[]):
+        target_list.append(element)
+        return target_list
+
+In the code above, if `append_to(1)` is executed followed by `append_to(2)`, the second call will return `[1, 2]` rather than `[2]`.
+
+Correct Idiom:
+Use `None` as the default sentinel value and initialize the mutable container inside the function body:
+
+    def append_to(element, target_list=None):
+        if target_list is None:
+            target_list = []
+        target_list.append(element)
+        return target_list
+
+2. Context Managers and Resource Leaks
+Always manage file streams, network sockets, database connections, and locks using the `with` statement.
+Failing to close file descriptors or database cursors leads to resource exhaustion and file lock contention, particularly on Windows platforms.
+
+Example:
+    with open('data.json', 'r', encoding='utf-8') as f:
+        data = json.load(f)
+
+3. Exception Propagation and Chaining
+When catching an exception and raising a new custom error, always preserve the original traceback using the `from` keyword:
+    try:
+        process_payment()
+    except GatewayError as exc:
+        raise PaymentProcessingFailed("Payment gateway error") from exc

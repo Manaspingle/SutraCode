@@ -1,0 +1,41 @@
+# Official Documentation Reference: Python Requests Library
+Source: Requests Developer Documentation (v2.31+)
+
+1. Timeouts and Connection Management
+Nearly all production requests should specify a `timeout` parameter to avoid hanging threads indefinitely.
+If no timeout is specified explicitly in `requests.get()`, `requests.post()`, etc., Requests will wait forever for a socket response from the remote server.
+
+Syntax:
+    requests.get('https://api.example.com/data', timeout=5.0)
+
+The `timeout` value specifies the number of seconds Requests will wait for the server to establish a connection and send response bytes. You can also pass a tuple `(connect_timeout, read_timeout)`, for instance: `timeout=(3.05, 27)`.
+If the remote server does not respond within the allocated time, Requests raises a `requests.exceptions.Timeout` exception (specifically `ConnectTimeout` or `ReadTimeout`).
+
+2. Error Handling and Status Codes
+Do not assume every request returns 200 OK. Always inspect `response.status_code` or call `response.raise_for_status()`.
+When `response.raise_for_status()` is called, an `HTTPError` exception is raised if the HTTP request returned an unsuccessful status code (4xx client error or 5xx server error).
+
+Example:
+    try:
+        response = requests.get('https://api.example.com/items', timeout=10)
+        response.raise_for_status()
+        data = response.json()
+    except requests.exceptions.HTTPError as http_err:
+        logger.error(f"HTTP error occurred: {http_err}")
+    except requests.exceptions.Timeout:
+        logger.error("The request timed out")
+    except requests.exceptions.RequestException as err:
+        logger.error(f"An unexpected error occurred: {err}")
+
+3. Session Objects and Persistent Connections
+When making multiple requests to the same host, create a `requests.Session()` object instead of invoking standalone functions.
+The Session object allows you to persist certain parameters across requests and reuses the underlying TCP connection via urllib3 connection pooling, providing significant performance improvements.
+
+Example:
+    with requests.Session() as session:
+        session.headers.update({'Authorization': f'Bearer {token}'})
+        response = session.get('https://api.example.com/profile', timeout=5)
+
+4. JSON Decoding
+The built-in `response.json()` method decodes the JSON payload using `json.loads`. If the response body does not contain valid JSON, it raises `requests.exceptions.JSONDecodeError`.
+Always ensure that the response has a `Content-Type: application/json` or wrap `response.json()` in an exception handler.
