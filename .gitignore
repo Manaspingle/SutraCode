@@ -25,3 +25,7 @@ __pycache__/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Static collection for production (built by build.sh on Render)
+staticfiles/
+

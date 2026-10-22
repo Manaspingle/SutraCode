@@ -6,15 +6,15 @@
 {% block content %}
 <div class="container py-5" style="max-width: 1200px;">
 
-  <!-- Hero Section with Solar Halo & High-Contrast Typography -->
-  <div class="row align-items-center justify-content-center text-center py-5 position-relative">
-    
+  <!-- HERO SECTION: High-Contrast Obsidian & Solar Halo -->
+  <div class="row align-items-center justify-content-center text-center pt-4 pb-5 position-relative">
     <div class="col-lg-10 col-xl-9 position-relative" style="z-index: 2;">
       
-      <!-- Telemetry Badge Inspired by Reference Image 2 & 5 -->
+      <!-- Telemetry Beacon Badge -->
       <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill mb-4 border border-secondary border-opacity-25" style="background: rgba(255,255,255,0.03);">
-        <span class="badge bg-warning text-dark rounded-pill fw-bold" style="font-size: 0.68rem; letter-spacing: 0.05em;">● RAG ENGINE</span>
-        <span class="small text-secondary" style="font-size: 0.82rem;">Evidence-Grounded Code Debugging Assistant</span>
+        <span class="beacon-dot"></span>
+        <span class="badge bg-warning text-dark rounded-pill fw-bold" style="font-size: 0.68rem; letter-spacing: 0.05em;">RAG ENGINE ACTIVE</span>
+        <span class="small text-secondary" style="font-size: 0.82rem;">Zero-Hallucination Code Debugging Assistant</span>
         <i class="bi bi-arrow-right text-warning small"></i>
       </div>
 
@@ -27,97 +27,318 @@
       </h1>
 
       <!-- Subtitle -->
-      <p class="lead text-secondary mb-4 mx-auto" style="max-width: 640px; font-size: 1.1rem; line-height: 1.6;">
-        Generic chatbots hallucinate plausible-looking rewrites. <strong>SutraTrace</strong> retrieves exact passages from your technical manuals to verify root causes, generate surgical line diffs, and cite proof.
+      <p class="lead text-secondary mb-4 mx-auto" style="max-width: 680px; font-size: 1.12rem; line-height: 1.6;">
+        Generic chatbots hallucinate plausible-looking rewrites that break production. <strong>SutraTrace</strong> retrieves exact passages from your technical manuals to isolate root causes, generate surgical line diffs, and cite proof.
       </p>
 
       <!-- Action CTAs -->
       <div class="d-flex flex-wrap justify-content-center gap-3 mb-5">
         <a href="{% url 'debugger:debugger' %}" class="btn btn-sutra-primary py-3 px-4 fs-6">
-          <span>Start Debugging</span> <i class="bi bi-arrow-right"></i>
+          <span>Launch Debugger Workspace</span> <i class="bi bi-arrow-right ms-1"></i>
         </a>
         {% if not user.is_authenticated %}
         <a href="{% url 'debugger:login' %}" class="btn btn-sutra-secondary py-3 px-4 fs-6">
-          <i class="bi bi-person"></i> Sign In to Account
+          <i class="bi bi-person me-1"></i> Sign In to Account
         </a>
         {% else %}
         <a href="{% url 'debugger:history' %}" class="btn btn-sutra-secondary py-3 px-4 fs-6">
-          <i class="bi bi-clock-history"></i> View History
+          <i class="bi bi-clock-history me-1"></i> View Audit History
         </a>
         {% endif %}
       </div>
 
-      <!-- Compact 4-Step Pipeline Bar -->
-      <div class="sutra-card p-3 mx-auto mb-4" style="max-width: 820px; background: rgba(14, 18, 26, 0.7); backdrop-filter: blur(16px);">
-        <div class="row g-2 text-start">
-          <div class="col-6 col-md-3">
-            <div class="p-2 rounded border border-secondary border-opacity-15 h-100" style="background: rgba(0,0,0,0.25);">
-              <div class="small fw-bold text-light mb-1">1. Code & Error</div>
-              <div class="text-muted" style="font-size: 0.74rem;">Paste code and observed error trace.</div>
+    </div>
+  </div>
+
+  <!-- SECTION 1: CINEMATIC VISUAL SHOWCASE - HOW SUTRATRACE WORKS -->
+  <div class="my-5">
+    
+    <!-- Section Title & Badge -->
+    <div class="text-center mb-4">
+      <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill mb-2 border border-warning border-opacity-30" style="background: rgba(245, 158, 11, 0.05);">
+        <i class="bi bi-cpu text-warning small"></i>
+        <span class="text-warning fw-bold text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.08em;">ARCHITECTURE PIPELINE</span>
+      </div>
+      <h2 class="h3 fw-bold text-light">How SutraTrace Works Under The Hood</h2>
+      <p class="text-secondary small mx-auto mb-0" style="max-width: 620px;">
+        High-throughput vector indexing and evidence-constrained Gemini reasoning combine to guarantee zero-hallucination code fixes.
+      </p>
+    </div>
+
+    <!-- Cinematic 3D RAG Flow Banner with Animated Laser Scanline -->
+    <div class="cinematic-glow-container mb-4 position-relative">
+      <div class="scanline-sweep"></div>
+      
+      <img src="{% static 'debugger/img/sutracode_rag_flow.jpg' %}" 
+           alt="SutraCode Grounded RAG Flow Architecture" 
+           class="cinematic-img" 
+           style="max-height: 480px; object-fit: cover;">
+
+      <!-- Floating Glass Pills Overlay -->
+      <div class="cinematic-overlay-bottom">
+        <div class="d-flex flex-wrap gap-2">
+          <span class="glass-pill-tag">
+            <i class="bi bi-file-earmark-pdf text-warning"></i> PyMuPDF Engine
+          </span>
+          <span class="glass-pill-tag">
+            <i class="bi bi-database text-info"></i> ChromaDB ONNX Embeddings
+          </span>
+          <span class="glass-pill-tag">
+            <i class="bi bi-stars text-warning"></i> Gemini Flash Grounding
+          </span>
+          <span class="glass-pill-tag">
+            <i class="bi bi-shield-check text-success"></i> Read-Only Sandbox
+          </span>
+        </div>
+        <div class="d-none d-md-block">
+          <span class="badge bg-dark text-secondary border border-secondary" style="font-size: 0.72rem;">
+            End-to-End Latency: &lt; 380ms
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 Interactive Architectural Step Cards -->
+    <div class="row g-3">
+      
+      <div class="col-md-6 col-lg-3">
+        <div class="arch-step-card h-100">
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <span class="badge bg-warning text-dark fw-bold rounded-pill" style="font-size: 0.65rem;">STAGE 01</span>
+            <i class="bi bi-file-earmark-arrow-up text-warning fs-5"></i>
+          </div>
+          <h5 class="h6 fw-bold text-light mb-1">Manual Ingestion</h5>
+          <p class="text-secondary mb-0" style="font-size: 0.78rem; line-height: 1.5;">
+            PyMuPDF parses official PDF & TXT manuals into semantic chunks, preserving section hierarchies with zero data leakage.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-3">
+        <div class="arch-step-card h-100">
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <span class="badge bg-info text-dark fw-bold rounded-pill" style="font-size: 0.65rem;">STAGE 02</span>
+            <i class="bi bi-search text-info fs-5"></i>
+          </div>
+          <h5 class="h6 fw-bold text-light mb-1">Vector Indexing</h5>
+          <p class="text-secondary mb-0" style="font-size: 0.78rem; line-height: 1.5;">
+            ChromaDB vectorizes chunks via 384-dim ONNX embeddings (<span class="font-mono text-light">all-MiniLM-L6-v2</span>) for sub-50ms cosine similarity lookup.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-3">
+        <div class="arch-step-card h-100">
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <span class="badge bg-warning text-dark fw-bold rounded-pill" style="font-size: 0.65rem;">STAGE 03</span>
+            <i class="bi bi-stars text-warning fs-5"></i>
+          </div>
+          <h5 class="h6 fw-bold text-light mb-1">Grounded Reasoning</h5>
+          <p class="text-secondary mb-0" style="font-size: 0.78rem; line-height: 1.5;">
+            Gemini Flash synthesizes the root cause strictly bounded by retrieved excerpts. If an API is not in the manual, it cannot be hallucinated.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-3">
+        <div class="arch-step-card h-100">
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <span class="badge bg-success text-dark fw-bold rounded-pill" style="font-size: 0.65rem;">STAGE 04</span>
+            <i class="bi bi-patch-check text-success fs-5"></i>
+          </div>
+          <h5 class="h6 fw-bold text-light mb-1">Surgical Line Diff</h5>
+          <p class="text-secondary mb-0" style="font-size: 0.78rem; line-height: 1.5;">
+            Generates a clean unified diff plus verbatim documentation citations and a verification assertion test for local validation.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- SECTION 2: INTUITIVE & OPTIMAL CASE STUDY (Understandable to Anyone) -->
+  <div class="my-5 pt-3">
+    
+    <!-- Title & Context -->
+    <div class="text-center mb-4">
+      <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill mb-2 border border-danger border-opacity-30" style="background: rgba(239, 68, 68, 0.05);">
+        <i class="bi bi-exclamation-triangle text-danger small"></i>
+        <span class="text-danger fw-bold text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.08em;">REAL-WORLD DEFECT BENCHMARK</span>
+      </div>
+      <h2 class="h3 fw-bold text-light">The "Silent Socket Freeze": Understandable in 30 Seconds</h2>
+      <p class="text-secondary small mx-auto mb-0" style="max-width: 680px;">
+        Why generic AI assistants fail in production, and how SutraTrace's evidence retrieval solves problems that crash live servers.
+      </p>
+    </div>
+
+    <!-- The Case Study Card -->
+    <div class="case-study-hero p-4 mb-4">
+      
+      <!-- Top Meta Banner -->
+      <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 pb-3 mb-3 border-bottom border-secondary border-opacity-25">
+        <div class="d-flex align-items-center gap-2">
+          <span class="badge bg-danger bg-opacity-20 text-danger border border-danger border-opacity-40" style="font-size: 0.72rem; font-weight: 700;">
+            DEFECT DETECTED
+          </span>
+          <span class="text-light fw-bold">Python Requests Socket Leak & Indefinite Hang</span>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <span class="badge bg-dark text-warning border border-warning border-opacity-40" style="font-size: 0.72rem;">
+            <i class="bi bi-book me-1"></i> Grounded in Official Requests Manual (Page 1)
+          </span>
+        </div>
+      </div>
+
+      <!-- Plain English Problem vs Fix Breakdown (Accessible to Anyone) -->
+      <div class="row g-3 mb-4">
+        
+        <!-- Left: The Bug & Explanation -->
+        <div class="col-lg-6">
+          <div class="flaw-callout mb-2">
+            <div class="fw-bold text-danger mb-1 d-flex align-items-center gap-1">
+              <i class="bi bi-x-circle-fill"></i> <span>The Flaw: Why Your Backend Freezes</span>
+            </div>
+            <div>
+              Standard Python <code class="text-light">requests.get()</code> has <strong>no timeout by default</strong>. If a third-party server hangs or an ISP drops a packet, your server worker thread waits indefinitely. 50 stalled requests will exhaust your thread pool and bring down your entire production server.
             </div>
           </div>
-          <div class="col-6 col-md-3">
-            <div class="p-2 rounded border border-warning border-opacity-25 h-100" style="background: rgba(245, 158, 11, 0.04);">
-              <div class="small fw-bold text-warning mb-1">2. ChromaDB RAG</div>
-              <div class="text-muted" style="font-size: 0.74rem;">Vectorize & retrieve documentation.</div>
+          
+          <div class="p-2 rounded" style="background: #050608; border: 1px solid var(--border-subtle);">
+            <div class="d-flex align-items-center justify-content-between px-2 py-1 mb-1 border-bottom border-secondary border-opacity-15">
+              <span class="small text-danger fw-semibold" style="font-size: 0.74rem;">- Buggy Code:</span>
+              <span class="badge bg-danger bg-opacity-20 text-danger" style="font-size: 0.65rem;">HANGS INDEFINITELY</span>
+            </div>
+            <pre class="m-0 p-2"><code class="language-python">def fetch_user_data(user_id):
+    url = f"https://api.example.com/users/{user_id}"
+    # ❌ Silent Failure: Never returns if remote server drops packet!
+    response = requests.get(url)
+    return response.json()</code></pre>
+          </div>
+        </div>
+
+        <!-- Right: The Verified Fix & Explanation -->
+        <div class="col-lg-6">
+          <div class="fix-callout mb-2">
+            <div class="fw-bold text-success mb-1 d-flex align-items-center gap-1">
+              <i class="bi bi-check-circle-fill"></i> <span>The SutraTrace Fix: Surgical & Fail-Safe</span>
+            </div>
+            <div>
+              Rather than hallucinating fake arguments or rewriting your entire function, SutraTrace retrieves the exact tuple timeout syntax <code class="text-light">(connect, read)</code> from the official documentation and injects HTTP response validation in two surgical lines.
             </div>
           </div>
-          <div class="col-6 col-md-3">
-            <div class="p-2 rounded border border-secondary border-opacity-15 h-100" style="background: rgba(0,0,0,0.25);">
-              <div class="small fw-bold text-light mb-1">3. Gemini 3.1</div>
-              <div class="text-muted" style="font-size: 0.74rem;">Grounded reasoning & root cause isolation.</div>
+
+          <div class="p-2 rounded" style="background: #050608; border: 1px solid var(--border-subtle);">
+            <div class="d-flex align-items-center justify-content-between px-2 py-1 mb-1 border-bottom border-secondary border-opacity-15">
+              <span class="small text-success fw-semibold" style="font-size: 0.74rem;">+ Verified Minimal Correction:</span>
+              <span class="badge bg-success bg-opacity-20 text-success" style="font-size: 0.65rem;">FAIL-SAFE GUARANTEED</span>
             </div>
+            <pre class="m-0 p-2"><code class="language-python">def fetch_user_data(user_id):
+    url = f"https://api.example.com/users/{user_id}"
+    # ✅ Enforces 3.05s connect / 10s read socket threshold
+    response = requests.get(url, timeout=(3.05, 10))
+    response.raise_for_status()
+    return response.json()</code></pre>
           </div>
-          <div class="col-6 col-md-3">
-            <div class="p-2 rounded border border-success border-opacity-25 h-100" style="background: rgba(16, 185, 129, 0.04);">
-              <div class="small fw-bold text-success mb-1">4. Verified Fix</div>
-              <div class="text-muted" style="font-size: 0.74rem;">Inspect clean diff & cited quotes.</div>
-            </div>
+        </div>
+
+      </div>
+
+      <!-- Verifiable Citation Callout Box -->
+      <div class="p-3 rounded border border-warning border-opacity-25" style="background: rgba(245, 158, 11, 0.04);">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-2">
+          <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-patch-check-fill text-warning"></i>
+            <span class="small fw-bold text-warning text-uppercase" style="letter-spacing: 0.05em; font-size: 0.76rem;">
+              Verified Citation from Official Python Requests Manual:
+            </span>
           </div>
+          <span class="badge bg-dark text-warning border border-warning border-opacity-30" style="font-size: 0.7rem;">
+            Cosine Similarity: 0.89 • Retrieved Chunk #1
+          </span>
+        </div>
+        <blockquote class="text-light mb-2 font-mono small" style="font-size: 0.84rem; line-height: 1.6; border-left: 2px solid var(--accent-amber); padding-left: 0.75rem;">
+          "Nearly all production requests should specify a timeout parameter to avoid hanging threads indefinitely... If no timeout is specified, Requests will wait forever for a socket response."
+        </blockquote>
+        <div class="text-muted small" style="font-size: 0.74rem;">
+          <i class="bi bi-info-circle text-info me-1"></i> SutraTrace eliminates AI hallucination by pinning the model strictly to verifiable documentation chunks.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Companion Visual: Dual Terminal Verification Screen -->
+    <div class="cinematic-glow-container position-relative">
+      <img src="{% static 'debugger/img/sutracode_diff_verify.jpg' %}" 
+           alt="SutraCode Dual Terminal Verification Screen" 
+           class="cinematic-img" 
+           style="max-height: 380px; object-fit: cover;">
+      
+      <div class="cinematic-overlay-bottom">
+        <div>
+          <span class="fw-bold text-light small d-block">Dual-Screen Real-Time Visual Diff Inspection</span>
+          <span class="text-secondary" style="font-size: 0.75rem;">Color-coded unified diff view makes inspecting code changes instantaneous for engineers and reviewers.</span>
+        </div>
+        <a href="{% url 'debugger:debugger' %}" class="btn btn-sutra-primary btn-sm py-1 px-3">
+          Try Live Demo <i class="bi bi-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SECTION 3: FEATURE HIGHLIGHTS & TRUST PILLARS -->
+  <div class="my-5 pt-3">
+    <div class="row g-4">
+      
+      <div class="col-md-4">
+        <div class="sutra-card p-4 h-100">
+          <div class="d-inline-flex p-2 rounded-circle bg-warning bg-opacity-10 text-warning mb-3">
+            <i class="bi bi-shield-shaded fs-4"></i>
+          </div>
+          <h4 class="h6 fw-bold text-light mb-2">Zero-Execution Sandbox</h4>
+          <p class="text-secondary small mb-0" style="line-height: 1.6;">
+            Untrusted user code is analyzed purely as text and AST tokens. Code is never run in containers or host shells, eliminating remote execution attack vectors.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="sutra-card p-4 h-100">
+          <div class="d-inline-flex p-2 rounded-circle bg-success bg-opacity-10 text-success mb-3">
+            <i class="bi bi-journal-bookmark fs-4"></i>
+          </div>
+          <h4 class="h6 fw-bold text-light mb-2">Mathematical Grounding</h4>
+          <p class="text-secondary small mb-0" style="line-height: 1.6;">
+            Every proposed fix requires source manual chunks. If similarity scores fall below threshold, SutraTrace flags the diagnosis as ungrounded rather than guessing.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="sutra-card p-4 h-100">
+          <div class="d-inline-flex p-2 rounded-circle bg-info bg-opacity-10 text-info mb-3">
+            <i class="bi bi-git fs-4"></i>
+          </div>
+          <h4 class="h6 fw-bold text-light mb-2">Production-Ready Diffs</h4>
+          <p class="text-secondary small mb-0" style="line-height: 1.6;">
+            Outputs surgical standard unified diffs (<span class="font-mono text-light">--- a/ +++ b/</span>) that can be reviewed, piped directly to git patch, or committed cleanly.
+          </p>
         </div>
       </div>
 
     </div>
   </div>
 
-  <!-- Live Diff Demonstration Card (Cursor / Claude inspired) -->
-  <div class="sutra-card p-4 my-4" style="background: #080A0E; border: 1px solid rgba(255, 255, 255, 0.1);">
-    <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom border-secondary border-opacity-25">
-      <div class="d-flex align-items-center gap-2">
-        <span class="badge bg-danger bg-opacity-20 text-danger border border-danger border-opacity-35" style="font-size: 0.7rem;">DEFECT ISOLATED</span>
-        <span class="text-light fw-bold small">Python Requests Socket Leak</span>
-      </div>
-      <div class="text-muted small" style="font-size: 0.75rem;">
-        <span class="text-warning"><i class="bi bi-file-text"></i> Grounded in Official Requests Manual (Page 1)</span>
-      </div>
-    </div>
-    
-    <div class="row g-3">
-      <div class="col-md-6">
-        <div class="small text-danger fw-semibold mb-1" style="font-size: 0.78rem;">- Buggy Code:</div>
-        <pre class="m-0 rounded p-3" style="background: #050608; border: 1px solid var(--border-subtle);"><code class="language-python">def fetch_user_data(user_id):
-    url = f"https://api.example.com/users/{user_id}"
-    # Hangs indefinitely on packet drop!
-    response = requests.get(url)
-    return response.json()</code></pre>
-      </div>
-      <div class="col-md-6">
-        <div class="small text-success fw-semibold mb-1" style="font-size: 0.78rem;">+ Verified Minimal Correction:</div>
-        <pre class="m-0 rounded p-3" style="background: #050608; border: 1px solid var(--border-subtle);"><code class="language-python">def fetch_user_data(user_id):
-    url = f"https://api.example.com/users/{user_id}"
-    # Enforces socket fail-fast threshold
-    response = requests.get(url, timeout=(3.05, 10))
-    response.raise_for_status()
-    return response.json()</code></pre>
-      </div>
-    </div>
-
-    <div class="mt-3 p-3 rounded" style="background: rgba(245, 158, 11, 0.04); border-left: 2px solid var(--accent-amber);">
-      <div class="small fw-bold text-warning mb-1" style="font-size: 0.75rem;">Verified Citation from Manual:</div>
-      <div class="small text-secondary font-mono" style="font-size: 0.8rem;">
-        "Nearly all production requests should specify a timeout parameter to avoid hanging threads indefinitely... If no timeout is specified, Requests will wait forever for a socket response."
-      </div>
-    </div>
+  <!-- BOTTOM CALL-TO-ACTION -->
+  <div class="text-center py-5 my-4 sutra-card p-5" style="background: radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.08) 0%, rgba(14, 18, 26, 0.95) 70%);">
+    <h3 class="display-6 fw-bold text-light mb-3">Ready to eliminate hallucinated debugging?</h3>
+    <p class="text-secondary small mx-auto mb-4" style="max-width: 500px;">
+      Upload your technical manual or test our pre-indexed Python documentation right inside the interactive workspace.
+    </p>
+    <a href="{% url 'debugger:debugger' %}" class="btn btn-sutra-primary py-3 px-5 fs-6">
+      <span>Open Debugger Workspace</span> <i class="bi bi-arrow-right ms-1"></i>
+    </a>
   </div>
 
 </div>

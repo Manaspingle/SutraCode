@@ -4,7 +4,7 @@
 {% block title %}Debugger Workspace — SutraTrace{% endblock %}
 
 {% block content %}
-<div class="container-fluid px-lg-4 py-4" style="max-width: 1400px;">
+<div class="container-fluid px-lg-4 py-4 pb-5 mb-4" style="max-width: 1400px;">
 
   <!-- Minimalist Workspace Header & Quick Actions -->
   <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
@@ -234,6 +234,27 @@
         </div>
       </div>
     </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+<!-- Sleek Developer IDE Status Bar (Replaces generic badges footer on Workspace) -->
+<div class="ide-status-bar fixed-bottom">
+  <div class="d-flex align-items-center gap-2 gap-sm-3">
+    <span class="d-inline-flex align-items-center gap-1 text-light">
+      <span class="beacon-dot" style="background-color: var(--accent-emerald);"></span>
+      <span class="fw-semibold text-success">RAG <span class="d-none d-sm-inline">Pipeline </span>Live</span>
+    </span>
+    <span class="text-secondary opacity-50 d-none d-md-inline">•</span>
+    <span class="text-secondary font-mono d-none d-md-inline">ChromaDB (384-dim ONNX)</span>
+    <span class="d-none d-lg-inline text-secondary opacity-50">•</span>
+    <span class="d-none d-lg-inline text-secondary">Gemini Flash</span>
+  </div>
+  <div class="d-flex align-items-center gap-2 gap-sm-3 font-mono">
+    <span class="text-secondary"><i class="bi bi-shield-check text-success"></i> <span class="d-none d-sm-inline">Zero-Execution </span>Sandbox</span>
+    <span class="text-secondary opacity-50 d-none d-sm-inline">•</span>
+    <span class="text-muted d-none d-sm-inline">v1.0.0</span>
   </div>
 </div>
 {% endblock %}

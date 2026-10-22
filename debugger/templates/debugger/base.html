@@ -66,7 +66,7 @@
         </ul>
 
         <!-- Right Side: Auth Status & Actions -->
-        <div class="d-flex align-items-center gap-2">
+        <div class="nav-actions-wrapper d-flex align-items-center gap-2 mt-3 mt-lg-0 pt-2 pt-lg-0">
           <div id="authStatusChip" class="{% if not user.is_authenticated %}d-none{% endif %}">
             {% if user.is_authenticated %}
             <div class="user-chip">
@@ -103,21 +103,101 @@
   <!-- Global Toast Notifications -->
   <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer" style="z-index: 1080;"></div>
 
-  <!-- Footer -->
-  <footer class="footer-sutra mt-5">
-    <div class="container text-center">
-      <div class="d-flex flex-wrap justify-content-center gap-2 mb-2">
-        <span class="badge bg-dark text-secondary border border-secondary" style="font-size: 0.72rem;">Django 6.1</span>
-        <span class="badge bg-dark text-warning border border-warning" style="font-size: 0.72rem;">Gemini 3.1 & Flash</span>
-        <span class="badge bg-dark text-secondary border border-secondary" style="font-size: 0.72rem;">ChromaDB Vector Store</span>
-        <span class="badge bg-dark text-success border border-success" style="font-size: 0.72rem;">all-MiniLM-L6-v2</span>
-        <span class="badge bg-dark text-info border border-info" style="font-size: 0.72rem;">Firebase Auth</span>
+  <!-- Footer Block (Can be overridden per page) -->
+  {% block footer %}
+  <footer class="footer-rich">
+    <div class="container py-4" style="max-width: 1200px;">
+      <div class="row g-4 mb-4">
+        
+        <!-- Brand & Mission Column -->
+        <div class="col-lg-4 col-md-6">
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <svg width="26" height="26" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="16" cy="16" r="14" stroke="#F59E0B" stroke-width="2.5" stroke-dasharray="6 3"/>
+              <path d="M10 16L14 20L22 12" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="22" cy="12" r="2.5" fill="#FFFFFF"/>
+            </svg>
+            <span class="fw-bold text-light fs-5" style="letter-spacing: -0.02em;">SutraTrace</span>
+          </div>
+          <p class="text-secondary small mb-3" style="line-height: 1.6;">
+            Evidence-grounded code debugging assistant. Resolves subtle production defects by retrieving verified technical documentation, isolating root causes, and generating surgical unified diffs.
+          </p>
+          <div class="d-flex align-items-center gap-2">
+            <span class="badge bg-dark text-warning border border-warning border-opacity-30" style="font-size: 0.72rem;">
+              <i class="bi bi-shield-check me-1"></i> Zero-Execution Sandbox
+            </span>
+            <span class="badge bg-dark text-success border border-success border-opacity-30" style="font-size: 0.72rem;">
+              <i class="bi bi-lightning-charge me-1"></i> RAG Grounded
+            </span>
+          </div>
+        </div>
+
+        <!-- Architecture & Engine Column -->
+        <div class="col-lg-3 col-md-6">
+          <h6>ARCHITECTURE</h6>
+          <ul class="list-unstyled small mb-0 d-flex flex-column gap-2">
+            <li><a href="{% url 'debugger:how_it_works' %}"><i class="bi bi-chevron-right text-warning me-1"></i> ChromaDB Vector Index</a></li>
+            <li><a href="{% url 'debugger:how_it_works' %}"><i class="bi bi-chevron-right text-warning me-1"></i> all-MiniLM-L6-v2 ONNX</a></li>
+            <li><a href="{% url 'debugger:how_it_works' %}"><i class="bi bi-chevron-right text-warning me-1"></i> Gemini 3.1 & Flash Fallback</a></li>
+            <li><a href="{% url 'debugger:how_it_works' %}"><i class="bi bi-chevron-right text-warning me-1"></i> PyMuPDF Document Parser</a></li>
+            <li><a href="{% url 'debugger:how_it_works' %}"><i class="bi bi-chevron-right text-warning me-1"></i> Unified Diff Synthesizer</a></li>
+          </ul>
+        </div>
+
+        <!-- Navigation & Workspace Column -->
+        <div class="col-lg-2 col-md-6">
+          <h6>PLATFORM</h6>
+          <ul class="list-unstyled small mb-0 d-flex flex-column gap-2">
+            <li><a href="{% url 'debugger:landing' %}">Overview</a></li>
+            <li><a href="{% url 'debugger:debugger' %}">Workspace</a></li>
+            <li><a href="{% url 'debugger:history' %}">Past Audits</a></li>
+            <li><a href="{% url 'debugger:login' %}">Sign In</a></li>
+            <li><a href="{% url 'debugger:signup' %}">Register</a></li>
+          </ul>
+        </div>
+
+        <!-- System Status & Telemetry Column -->
+        <div class="col-lg-3 col-md-6">
+          <h6>ENGINE TELEMETRY</h6>
+          <div class="p-3 rounded border border-secondary border-opacity-25" style="background: rgba(255,255,255,0.02);">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <span class="small text-muted">Retrieval Latency</span>
+              <span class="small text-success font-mono">&lt; 45ms</span>
+            </div>
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <span class="small text-muted">Model Context</span>
+              <span class="small text-warning font-mono">1.0M Tokens</span>
+            </div>
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="small text-muted">Core Sandbox</span>
+              <span class="small text-info font-mono">Isolated</span>
+            </div>
+          </div>
+          <div class="mt-2 text-muted small" style="font-size: 0.72rem;">
+            <i class="bi bi-check2-circle text-success me-1"></i> Untrusted code is statically analyzed and never executed.
+          </div>
+        </div>
+
       </div>
-      <p class="small text-muted mb-0">
-        SutraTrace — Trace the cause. Verify the fix. Untrusted code is never executed.
-      </p>
+
+      <!-- Bottom Bar -->
+      <div class="footer-bottom-bar d-flex flex-wrap align-items-center justify-content-between gap-3">
+        <div>
+          © 2026 SutraCode / SutraTrace. Built for Next-Gen Developer Workflows.
+        </div>
+        <div class="d-flex align-items-center gap-3">
+          <span class="text-secondary"><i class="bi bi-code-slash text-warning"></i> Django 5.1 & WhiteNoise</span>
+          <span class="text-secondary">•</span>
+          <span class="text-secondary"><i class="bi bi-cpu text-info"></i> Gemini Flash</span>
+          <span class="text-secondary">•</span>
+          <a href="https://github.com/Manaspingle/SutraCode" target="_blank" rel="noopener" class="text-secondary">
+            <i class="bi bi-github"></i> GitHub
+          </a>
+        </div>
+      </div>
     </div>
   </footer>
+  {% endblock %}
 
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

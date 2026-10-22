@@ -1,0 +1,39 @@
+services:
+  - type: web
+    name: sutracode
+    runtime: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn config.wsgi:application --bind 0.0.0.0:$PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.12
+      - key: DEBUG
+        value: "False"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-flash-latest
+      - key: FIREBASE_PROJECT_ID
+        value: sutracode-11188
+      - key: FIREBASE_API_KEY
+        sync: false
+      - key: FIREBASE_AUTH_DOMAIN
+        value: sutracode-11188.firebaseapp.com
+      - key: FIREBASE_STORAGE_BUCKET
+        value: sutracode-11188.firebasestorage.app
+      - key: FIREBASE_MESSAGING_SENDER_ID
+        value: "716936253835"
+      - key: FIREBASE_APP_ID
+        value: "1:716936253835:web:57ecbea1cc85018c43df8e"
+      - key: FIREBASE_MEASUREMENT_ID
+        value: "G-78Y7WS5W90"
+      - key: CHROMA_PERSIST_DIR
+        value: "./data/chromadb"
+      - key: UPLOAD_DIR
+        value: "./media/documents"
+      - key: SIMILARITY_THRESHOLD
+        value: "0.35"
+      - key: TOP_K_RESULTS
+        value: "5"
